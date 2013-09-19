@@ -3,6 +3,6 @@
 
     <string name="app_name">AprilBrush</string>
     <string name="action_settings">Settings</string>
-    <string name="coming_soon">coming soon</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
