@@ -4,12 +4,19 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 
+import ua.inf.krre.aprilbrush.data.CanvasData;
+import ua.inf.krre.aprilbrush.view.PaintView;
+
 public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        CanvasData canvasData = new CanvasData();
+        PaintView paintView = (PaintView) findViewById(R.id.paintView);
+        paintView.setCanvasData(canvasData);
     }
 
     @Override

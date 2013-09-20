@@ -1,6 +1,5 @@
 package ua.inf.krre.aprilbrush.view;
 
-import ua.inf.krre.aprilbrush.logic.BrushEngine;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,9 +9,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import ua.inf.krre.aprilbrush.data.CanvasData;
+import ua.inf.krre.aprilbrush.logic.BrushEngine;
+
 public class PaintView extends View {
     private BrushEngine engine;
-    private Bitmap bitmap;
+    private CanvasData canvasData;
     private Canvas canvas;
     private Paint bitmapPaint;
 
@@ -22,17 +24,25 @@ public class PaintView extends View {
         engine = new BrushEngine();
     }
 
+    public void setCanvasData(CanvasData canvasData) {
+        this.canvasData = canvasData;
+    }
+
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        canvas = new Canvas(bitmap);
+
+        if (canvasData.getBitmap() == null) {
+            Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            canvasData.setBitmap(bitmap);
+        }
+        canvas = new Canvas(canvasData.getBitmap());
     }
 
     @Override
     public void onDraw(Canvas canvas) {
         canvas.drawColor(Color.WHITE);
-        canvas.drawBitmap(bitmap, 0, 0, bitmapPaint);
+        canvas.drawBitmap(canvasData.getBitmap(), 0, 0, bitmapPaint);
     }
 
     @Override
@@ -49,5 +59,4 @@ public class PaintView extends View {
         }
         return true;
     }
-
 }
