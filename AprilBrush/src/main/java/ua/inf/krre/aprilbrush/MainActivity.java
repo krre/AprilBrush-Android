@@ -8,15 +8,24 @@ import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.view.PaintView;
 
 public class MainActivity extends Activity {
+    CanvasData canvasData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        CanvasData canvasData = new CanvasData();
+        canvasData = (CanvasData) getLastNonConfigurationInstance();
+        if (canvasData == null) {
+            canvasData = new CanvasData();
+        }
         PaintView paintView = (PaintView) findViewById(R.id.paintView);
         paintView.setCanvasData(canvasData);
+    }
+
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        return canvasData;
     }
 
     @Override
