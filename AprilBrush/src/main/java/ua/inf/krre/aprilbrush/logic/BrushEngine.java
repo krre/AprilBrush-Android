@@ -13,11 +13,11 @@ public class BrushEngine {
     private float prevY;
 
     private int spacing = 15;
-    private int size = 50;
+    private int size = 7;
     private float angle = 45.0f;
-    private float roundness = 2;
-    private int color = Color.BLUE;
-    private int opacity = 25;
+    private float roundness = 1;
+    private int color = Color.BLACK;
+    private int opacity = 30;
 
     public BrushEngine() {
         paint = new Paint();
