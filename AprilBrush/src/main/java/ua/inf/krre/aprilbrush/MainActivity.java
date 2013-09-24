@@ -3,6 +3,7 @@ package ua.inf.krre.aprilbrush;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.view.PaintView;
@@ -30,8 +31,20 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_clear:
+                canvasData.clear();
+                PaintView paintView = (PaintView) findViewById(R.id.paintView);
+                paintView.invalidate();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
