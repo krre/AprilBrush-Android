@@ -3,15 +3,21 @@ package ua.inf.krre.aprilbrush.logic;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.view.MotionEvent;
 
 public class BrushEngine {
+    private static final String TAG = "AB";
     private Paint paint;
     private Canvas canvas;
-
+    private Path path;
+    private PathMeasure pathMeasure;
+    private float[] pathMeasurePos = new float[2];
+    private float[] pathMeasureTan = new float[2];
+    private float pathLength;
     private float prevX;
     private float prevY;
-
     private int spacing = 15;
     private int size = 7;
     private float angle = 45.0f;
@@ -24,52 +30,60 @@ public class BrushEngine {
         paint.setColor(color);
         paint.setAntiAlias(true);
         paint.setAlpha(Math.round((float) opacity / 100 * 255));
+
+        path = new Path();
+        pathMeasure = new PathMeasure();
     }
 
     public void setTouch(Canvas canvas, MotionEvent event) {
         this.canvas = canvas;
         float x = event.getX();
         float y = event.getY();
-        drawDab(x, y);
+        paintOneDab(x, y);
+
+        path.reset();
+        path.moveTo(x, y);
+        pathLength = 0;
+
         prevX = x;
         prevY = y;
     }
 
-    public void paintDab(MotionEvent event) {
+    public void paintDabs(MotionEvent event) {
         float x, y;
         for (int i = 0; i < event.getHistorySize(); i++) {
             x = event.getHistoricalX(i);
             y = event.getHistoricalY(i);
-            interpolateDab(x, y);
+            interpolateDabs(x, y);
         }
         x = event.getX();
         y = event.getY();
-        interpolateDab(x, y);
+        interpolateDabs(x, y);
     }
 
-    private void interpolateDab(float x, float y) {
-        double length = Math.sqrt(Math.pow(prevX - x, 2)
+    private void interpolateDabs(float x, float y) {
+        double pointSpace = Math.sqrt(Math.pow(prevX - x, 2)
                 + Math.pow(prevY - y, 2));
+
         float deltaDab = size * spacing / 100;
-        // drawing dabs between the events
-        if (length >= deltaDab) {
-            long numDabs = Math.round(length / deltaDab);
-            double angle = Math.atan2(x - prevX, y - prevY);
-            double deltaX = deltaDab * Math.sin(angle);
-            double deltaY = deltaDab * Math.cos(angle);
-            float betweenX = 0;
-            float betweenY = 0;
-            for (int i = 1; i <= numDabs; i++) {
-                betweenX = (float) (prevX + deltaX * i);
-                betweenY = (float) (prevY + deltaY * i);
-                drawDab(betweenX, betweenY);
-            }
-            prevX = betweenX;
-            prevY = betweenY;
+        if (pointSpace >= deltaDab) {
+            path.quadTo(prevX, prevY, (x + prevX) / 2, (y + prevY) / 2);
+        } else {
+            path.lineTo(x, y);
         }
+        pathMeasure.setPath(path, false);
+        while (pathMeasure.getLength() >= pathLength) {
+            pathMeasure.getPosTan(pathLength, pathMeasurePos, pathMeasureTan);
+            if (pathLength > 0) {
+                paintOneDab(pathMeasurePos[0], pathMeasurePos[1]);
+            }
+            pathLength += deltaDab;
+        }
+        prevX = x;
+        prevY = y;
     }
 
-    private void drawDab(float x, float y) {
+    private void paintOneDab(float x, float y) {
         canvas.save();
         canvas.rotate(angle, x, y);
         canvas.scale(1.0f, 1 / roundness, x, y);

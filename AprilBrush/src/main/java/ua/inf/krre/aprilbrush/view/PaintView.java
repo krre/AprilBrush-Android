@@ -53,7 +53,7 @@ public class PaintView extends View {
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
-                engine.paintDab(event);
+                engine.paintDabs(event);
                 invalidate();
                 break;
         }
