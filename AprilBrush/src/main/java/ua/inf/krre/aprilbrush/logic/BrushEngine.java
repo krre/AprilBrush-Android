@@ -8,7 +8,7 @@ import android.graphics.PathMeasure;
 import android.view.MotionEvent;
 
 public class BrushEngine {
-    private static final String TAG = "AB";
+    private static BrushEngine engine = new BrushEngine();
     private Paint paint;
     private Canvas canvas;
     private Path path;
@@ -25,7 +25,7 @@ public class BrushEngine {
     private int color = Color.BLACK;
     private int opacity = 30;
 
-    public BrushEngine() {
+    private BrushEngine() {
         paint = new Paint();
         paint.setColor(color);
         paint.setAntiAlias(true);
@@ -33,6 +33,10 @@ public class BrushEngine {
 
         path = new Path();
         pathMeasure = new PathMeasure();
+    }
+
+    public static BrushEngine getInstance() {
+        return engine;
     }
 
     public void setTouch(Canvas canvas, MotionEvent event) {

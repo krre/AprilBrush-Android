@@ -21,7 +21,7 @@ public class PaintView extends View {
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         bitmapPaint = new Paint(Paint.DITHER_FLAG);
-        engine = new BrushEngine();
+        engine = BrushEngine.getInstance();
     }
 
     public void setCanvasData(CanvasData canvasData) {
