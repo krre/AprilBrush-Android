@@ -1,16 +1,17 @@
 package ua.inf.krre.aprilbrush;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import ua.inf.krre.aprilbrush.data.CanvasData;
+import ua.inf.krre.aprilbrush.dialog.ColorDialog;
 import ua.inf.krre.aprilbrush.view.PaintView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     CanvasData canvasData;
+    ColorDialog colorDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +27,8 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public Object onRetainNonConfigurationInstance() {
-        return canvasData;
+    public void setRequestedOrientation(int requestedOrientation) {
+        super.setRequestedOrientation(requestedOrientation);
     }
 
     @Override
@@ -45,7 +46,8 @@ public class MainActivity extends Activity {
                 paintView.invalidate();
                 return true;
             case R.id.action_color:
-                Log.d("AB", "color");
+                colorDialog = new ColorDialog();
+                colorDialog.show(getSupportFragmentManager(), "color");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
