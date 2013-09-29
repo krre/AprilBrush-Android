@@ -3,4 +3,8 @@
         android:title="@string/action_clear"
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
+    <item android:id="@+id/action_color"
+        android:title="@string/action_color"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom" />
 </menu>

@@ -27,7 +27,6 @@ public class PaintView extends View {
     public void setCanvasData(CanvasData canvasData) {
         this.canvasData = canvasData;
     }
-
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);

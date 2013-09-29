@@ -2,6 +2,7 @@ package ua.inf.krre.aprilbrush;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -42,6 +43,9 @@ public class MainActivity extends Activity {
                 canvasData.clear();
                 PaintView paintView = (PaintView) findViewById(R.id.paintView);
                 paintView.invalidate();
+                return true;
+            case R.id.action_color:
+                Log.d("AB", "color");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
