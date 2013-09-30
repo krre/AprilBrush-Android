@@ -1,11 +1,15 @@
 package ua.inf.krre.aprilbrush.logic;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.view.MotionEvent;
+
+import ua.inf.krre.aprilbrush.AppAprilBrush;
+import ua.inf.krre.aprilbrush.R;
 
 public class BrushEngine {
     private static BrushEngine engine = new BrushEngine();
@@ -18,15 +22,18 @@ public class BrushEngine {
     private float pathLength;
     private float prevX;
     private float prevY;
-    private int spacing = 15;
-    private int size = 7;
-    private float angle = 45.0f;
-    private float roundness = 1;
+    private int spacing;
+    private int size;
+    private float angle;
+    private float roundness;
     private int color;
-    private int opacity = 30;
+    private int opacity;
+    private Context context;
 
     private BrushEngine() {
-        color = Color.BLACK;
+        context = AppAprilBrush.getContext();
+        getBrushValues();
+
         paint = new Paint();
         paint.setColor(color);
         paint.setAntiAlias(true);
@@ -38,6 +45,17 @@ public class BrushEngine {
 
     public static BrushEngine getInstance() {
         return engine;
+    }
+
+    private void getBrushValues() {
+        Resources resources = context.getResources();
+
+        size = resources.getInteger(R.integer.size);
+        spacing = resources.getInteger(R.integer.spacing);
+        angle = resources.getInteger(R.integer.angle);
+        roundness = resources.getInteger(R.integer.roundness);
+        opacity = resources.getInteger(R.integer.opacity);
+        color = resources.getColor(R.color.color);
     }
 
     public int getOpacity() {
