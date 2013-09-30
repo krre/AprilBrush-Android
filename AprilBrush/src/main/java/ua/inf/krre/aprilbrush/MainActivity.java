@@ -1,5 +1,6 @@
 package ua.inf.krre.aprilbrush;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -7,16 +8,22 @@ import android.view.MenuItem;
 
 import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.dialog.ColorDialog;
+import ua.inf.krre.aprilbrush.logic.BrushEngine;
 import ua.inf.krre.aprilbrush.view.PaintView;
 
 public class MainActivity extends FragmentActivity {
+    public static final String PREFS_NAME = "prefs";
     CanvasData canvasData;
     ColorDialog colorDialog;
+    BrushEngine brushEngine;
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        brushEngine = BrushEngine.getInstance();
 
         canvasData = (CanvasData) getLastNonConfigurationInstance();
         if (canvasData == null) {
@@ -24,6 +31,10 @@ public class MainActivity extends FragmentActivity {
         }
         PaintView paintView = (PaintView) findViewById(R.id.paintView);
         paintView.setCanvasData(canvasData);
+
+        settings = getSharedPreferences(PREFS_NAME, 0);
+        int color = settings.getInt("color", 0xFF000000);
+        brushEngine.setColor(color);
     }
 
     @Override
@@ -52,5 +63,13 @@ public class MainActivity extends FragmentActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("color", brushEngine.getColor());
+        editor.commit();
     }
 }
