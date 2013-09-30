@@ -1,5 +1,6 @@
 package ua.inf.krre.aprilbrush.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -60,6 +61,10 @@ public class MainActivity extends FragmentActivity {
             case R.id.action_color:
                 colorDialog = new ColorDialog();
                 colorDialog.show(getSupportFragmentManager(), "color");
+                return true;
+            case R.id.action_brush:
+                Intent intent = new Intent(this, BrushSettingsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
