@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_all_margin">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:text="@string/color_hue"
+        android:id="@+id/slider_title_textView"
+        android:layout_gravity="left|center_vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/slider_seekBar"
+        android:layout_below="@+id/slider_title_textView"
+        android:layout_alignParentLeft="true"
+        android:paddingBottom="@dimen/seekbar_bottom_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:text="@string/color_hue"
+        android:id="@+id/slider_value_textView"
+        android:layout_gravity="left|center_vertical"
+        android:layout_above="@+id/slider_seekBar"
+        android:layout_alignRight="@+id/slider_seekBar" />
+
+</merge>
