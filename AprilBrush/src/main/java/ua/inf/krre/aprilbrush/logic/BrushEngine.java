@@ -22,10 +22,11 @@ public class BrushEngine {
     private int size = 7;
     private float angle = 45.0f;
     private float roundness = 1;
-    private int color = Color.BLACK;
+    private int color;
     private int opacity = 30;
 
     private BrushEngine() {
+        color = Color.BLACK;
         paint = new Paint();
         paint.setColor(color);
         paint.setAntiAlias(true);
@@ -37,6 +38,23 @@ public class BrushEngine {
 
     public static BrushEngine getInstance() {
         return engine;
+    }
+
+    public int getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(int opacity) {
+        this.opacity = opacity;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        paint.setColor(color);
     }
 
     public void setTouch(Canvas canvas, MotionEvent event) {
