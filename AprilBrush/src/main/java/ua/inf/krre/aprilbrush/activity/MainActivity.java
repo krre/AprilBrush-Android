@@ -1,4 +1,4 @@
-package ua.inf.krre.aprilbrush;
+package ua.inf.krre.aprilbrush.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.dialog.ColorDialog;
 import ua.inf.krre.aprilbrush.logic.BrushEngine;
