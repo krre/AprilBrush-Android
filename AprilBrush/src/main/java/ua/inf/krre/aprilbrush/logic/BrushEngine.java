@@ -10,12 +10,15 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import ua.inf.krre.aprilbrush.AppAprilBrush;
 import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.data.BrushData;
+import ua.inf.krre.aprilbrush.view.SliderView;
 
-public class BrushEngine extends Object {
+public class BrushEngine extends Object implements Observer {
     private static BrushEngine engine = new BrushEngine();
     private Paint paint;
     private Canvas canvas;
@@ -27,7 +30,7 @@ public class BrushEngine extends Object {
     private float prevX;
     private float prevY;
     private int hue;
-    private int saturation ;
+    private int saturation;
     private int value;
     private int alpha;
     private int size;
@@ -55,6 +58,11 @@ public class BrushEngine extends Object {
         return engine;
     }
 
+    public void update(Observable obj, Object arg) {
+        SliderView sliderView = (SliderView) arg;
+        setProperty(sliderView.getTitle(), sliderView.getValue());
+    }
+
     public void setHue(int hue) {
         this.hue = hue;
         setHsv();
@@ -80,37 +88,41 @@ public class BrushEngine extends Object {
         brushList = BrushData.getInstance().getList();
         brushList = new ArrayList<BrushData.Brush>(brushList);
         for (BrushData.Brush brush : brushList) {
-            if (brush.getName().equals(context.getString(R.string.brush_size))) {
-                size = brush.getDefaultValue();
-                continue;
-            }
-            if (brush.getName().equals(context.getString(R.string.brush_spacing))) {
-                spacing = brush.getDefaultValue();
-                continue;
-            }
-            if (brush.getName().equals(context.getString(R.string.brush_opacity))) {
-                setOpacity(brush.getDefaultValue());
-                continue;
-            }
-            if (brush.getName().equals(context.getString(R.string.brush_roundness))) {
-                roundness = brush.getDefaultValue();
-                continue;
-            }
-            if (brush.getName().equals(context.getString(R.string.brush_angle))) {
-                angle = brush.getDefaultValue();
-                continue;
-            }
-            if (brush.getName().equals(context.getString(R.string.color_hue))) {
-                setHue(brush.getDefaultValue());
-                continue;
-            }
-            if (brush.getName().equals(context.getString(R.string.color_saturation))) {
-                setSaturation(brush.getDefaultValue());
-                continue;
-            }
-            if (brush.getName().equals(context.getString(R.string.color_value))) {
-                setValue(brush.getDefaultValue());
-            }
+            setProperty(brush.getName(), brush.getDefaultValue());
+        }
+    }
+
+    private void setProperty(String propertyName, int property) {
+        if (propertyName.equals(context.getString(R.string.brush_size))) {
+            size = property;
+            return;
+        }
+        if (propertyName.equals(context.getString(R.string.brush_spacing))) {
+            spacing = property;
+            return;
+        }
+        if (propertyName.equals(context.getString(R.string.brush_opacity))) {
+            setOpacity(property);
+            return;
+        }
+        if (propertyName.equals(context.getString(R.string.brush_roundness))) {
+            roundness = property;
+            return;
+        }
+        if (propertyName.equals(context.getString(R.string.brush_angle))) {
+            angle = property;
+            return;
+        }
+        if (propertyName.equals(context.getString(R.string.color_hue))) {
+            setHue(property);
+            return;
+        }
+        if (propertyName.equals(context.getString(R.string.color_saturation))) {
+            setSaturation(property);
+            return;
+        }
+        if (propertyName.equals(context.getString(R.string.color_value))) {
+            setValue(property);
         }
     }
 

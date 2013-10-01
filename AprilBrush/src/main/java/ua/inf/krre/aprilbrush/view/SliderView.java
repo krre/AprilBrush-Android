@@ -6,6 +6,9 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import ua.inf.krre.aprilbrush.R;
 
 public class SliderView extends RelativeLayout {
@@ -13,15 +16,25 @@ public class SliderView extends RelativeLayout {
     private TextView valueView;
     private SeekBar seekBar;
     private int minValue;
-    private Object trackingValue;
+    private int value;
+    private SliderObservable sliderObservable;
 
     public SliderView(Context context) {
         super(context);
+        sliderObservable = new SliderObservable();
         initComponent();
+    }
+
+    public int getValue() {
+        return value;
     }
 
     public void setValue(int value) {
         seekBar.setProgress(value);
+    }
+
+    public String getTitle() {
+        return titleView.getText().toString();
     }
 
     public void setTitle(String title) {
@@ -36,8 +49,8 @@ public class SliderView extends RelativeLayout {
         this.minValue = value;
     }
 
-    public void setTrackingValue(Object object) {
-        trackingValue = object;
+    public void addObserver(Observer observer) {
+        sliderObservable.addObserver(observer);
     }
 
     private void initComponent() {
@@ -54,14 +67,21 @@ public class SliderView extends RelativeLayout {
 
             @Override
             public void onProgressChanged(SeekBar seekBar1, int progress, boolean fromUser) {
-                int value = minValue + progress;
+                value = minValue + progress;
                 valueView.setText(String.format("%d", value));
-                trackingValue = value;
+                sliderObservable.onValueChanged(SliderView.this);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar1) {
             }
         });
+    }
+
+    public class SliderObservable extends Observable {
+        public void onValueChanged(SliderView sliderView) {
+            setChanged();
+            notifyObservers(sliderView);
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.data.BrushData;
+import ua.inf.krre.aprilbrush.logic.BrushEngine;
 import ua.inf.krre.aprilbrush.view.SliderView;
 
 public class BrushSettingsActivity extends Activity {
@@ -15,6 +16,7 @@ public class BrushSettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.brush_settings);
         BrushData brushData = BrushData.getInstance();
+        BrushEngine brushEngine = BrushEngine.getInstance();
 
         LinearLayout slidersContainer = (LinearLayout) findViewById(R.id.sliders_container);
         for (int i = 0; i < brushData.getList().size(); i++) {
@@ -25,6 +27,7 @@ public class BrushSettingsActivity extends Activity {
             sliderView.setMin(brush.getMinValue());
             sliderView.setMax(brush.getMaxValue());
             sliderView.setValue(brush.getDefaultValue());
+            sliderView.addObserver(brushEngine);
             slidersContainer.addView(sliderView);
         }
     }
