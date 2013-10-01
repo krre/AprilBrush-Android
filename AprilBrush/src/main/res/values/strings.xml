@@ -6,8 +6,16 @@
     <string name="action_clear">Clear</string>
     <string name="action_color">Color</string>
     <string name="action_brush">Brush</string>
+
     <string name="color_hue">Hue</string>
     <string name="color_saturation">Saturation</string>
     <string name="color_value">Value</string>
+
+    <string name="brush_size">Size</string>
+    <string name="brush_spacing">Spacing</string>
+    <string name="brush_opacity">Opacity</string>
+    <string name="brush_roundness">Roundness</string>
+    <string name="brush_angle">Angle</string>
+
 
 </resources>
