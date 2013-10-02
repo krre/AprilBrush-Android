@@ -1,6 +1,5 @@
 package ua.inf.krre.aprilbrush.logic;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,12 +12,10 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import ua.inf.krre.aprilbrush.AppAprilBrush;
-import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.data.BrushData;
 import ua.inf.krre.aprilbrush.view.SliderView;
 
-public class BrushEngine extends Object implements Observer {
+public class BrushEngine implements Observer {
     private static BrushEngine engine = new BrushEngine();
     private Paint paint;
     private Canvas canvas;
@@ -29,21 +26,11 @@ public class BrushEngine extends Object implements Observer {
     private float pathLength;
     private float prevX;
     private float prevY;
-    private int hue;
-    private int saturation;
-    private int value;
-    private int alpha;
-    private int size;
-    private int spacing;
-    private int angle;
-    private int roundness;
     private int color;
-    private int opacity;
-    private Context context;
+    private int alpha;
     private List<BrushData.Brush> brushList;
 
     private BrushEngine() {
-        context = AppAprilBrush.getContext();
 
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -58,91 +45,47 @@ public class BrushEngine extends Object implements Observer {
         return engine;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public List<BrushData.Brush> getBrushList() {
+
+        return brushList;
+    }
+
+    private int value(BrushData.Property property) {
+        return brushList.get(property.ordinal()).getCurrentValue();
+    }
+
+    private BrushData.Property property(int ordinal) {
+        return BrushData.Property.values()[ordinal];
+    }
+
     public void update(Observable obj, Object arg) {
         SliderView sliderView = (SliderView) arg;
-        setProperty(sliderView.getTitle(), sliderView.getValue());
-    }
+        int id = sliderView.getId();
+        BrushData.Brush brush = brushList.get(id);
+        int value = sliderView.getValue();
+        brush.setCurrentValue(value);
 
-    public void setHue(int hue) {
-        this.hue = hue;
-        setHsv();
-    }
+        BrushData.Property property = property(id);
+        if (property == BrushData.Property.HUE || property == BrushData.Property.SATURATION || property == BrushData.Property.VALUE) {
+            float[] hsv = {value(BrushData.Property.HUE), value(BrushData.Property.SATURATION), value(BrushData.Property.VALUE)};
+            color = Color.HSVToColor(alpha, hsv);
+            paint.setColor(color);
+        }
 
-    public void setSaturation(int saturation) {
-        this.saturation = saturation;
-        setHsv();
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-        setHsv();
-    }
-
-    private void setHsv() {
-        float[] hsv = {hue, saturation, value};
-        color = Color.HSVToColor(alpha, hsv);
-        paint.setColor(color);
+        if (property == BrushData.Property.OPACITY) {
+            alpha = Math.round((float) value / 100 * 255);
+            paint.setAlpha(alpha);
+        }
     }
 
     private void getBrushValues() {
         brushList = BrushData.getInstance().getList();
         brushList = new ArrayList<BrushData.Brush>(brushList);
-        for (BrushData.Brush brush : brushList) {
-            setProperty(brush.getName(), brush.getDefaultValue());
-        }
-    }
 
-    private void setProperty(String propertyName, int property) {
-        if (propertyName.equals(context.getString(R.string.brush_size))) {
-            size = property;
-            return;
-        }
-        if (propertyName.equals(context.getString(R.string.brush_spacing))) {
-            spacing = property;
-            return;
-        }
-        if (propertyName.equals(context.getString(R.string.brush_opacity))) {
-            setOpacity(property);
-            return;
-        }
-        if (propertyName.equals(context.getString(R.string.brush_roundness))) {
-            roundness = property;
-            return;
-        }
-        if (propertyName.equals(context.getString(R.string.brush_angle))) {
-            angle = property;
-            return;
-        }
-        if (propertyName.equals(context.getString(R.string.color_hue))) {
-            setHue(property);
-            return;
-        }
-        if (propertyName.equals(context.getString(R.string.color_saturation))) {
-            setSaturation(property);
-            return;
-        }
-        if (propertyName.equals(context.getString(R.string.color_value))) {
-            setValue(property);
-        }
-    }
-
-    public int getOpacity() {
-        return opacity;
-    }
-
-    public void setOpacity(int opacity) {
-        this.opacity = opacity;
-        alpha = Math.round((float) opacity / 100 * 255);
-        paint.setAlpha(alpha);
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-        paint.setColor(color);
     }
 
     public void setTouch(Canvas canvas, MotionEvent event) {
@@ -175,6 +118,8 @@ public class BrushEngine extends Object implements Observer {
         double pointSpace = Math.sqrt(Math.pow(prevX - x, 2)
                 + Math.pow(prevY - y, 2));
 
+        int size = value(BrushData.Property.SIZE);
+        int spacing = value(BrushData.Property.SPACING);
         float deltaDab = size * (float) spacing / 100;
         if (pointSpace >= deltaDab) {
             path.quadTo(prevX, prevY, (x + prevX) / 2, (y + prevY) / 2);
@@ -195,19 +140,24 @@ public class BrushEngine extends Object implements Observer {
 
     private void paintOneDab(float x, float y) {
         canvas.save();
+        int angle = value(BrushData.Property.ANGLE);
         canvas.rotate(angle, x, y);
+        int roundness = value(BrushData.Property.ROUNDNESS);
         canvas.scale(1.0f, 100f / roundness, x, y);
+        int size = value(BrushData.Property.SIZE);
         canvas.drawCircle(x, y, size / 2, paint);
         canvas.restore();
     }
 
     @Override
     public String toString() {
-        return "Color = " + color + "\n" +
-                "Size = " + size + "\n" +
-                "Spacing = " + spacing + "\n" +
-                "Opacity = " + opacity + "\n" +
-                "Roundness = " + roundness + "\n" +
-                "Angle = " + angle + "\n";
+        String properties = "";
+        for (int i = 0; i < brushList.size(); i++) {
+            BrushData.Property property = BrushData.Property.values()[i];
+            String name = property.toString();
+            int value = value(property);
+            properties = name + " = " + value + "\n";
+        }
+        return properties;
     }
 }

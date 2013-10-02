@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@android:style/TextAppearance.Small"
         android:text="@string/color_hue"
-        android:id="@+id/slider_title_textView"
+        android:id="@+id/slider_name_textView"
         android:layout_gravity="left|center_vertical"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp"
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/slider_seekBar"
-        android:layout_below="@+id/slider_title_textView"
+        android:layout_below="@+id/slider_name_textView"
         android:layout_alignParentLeft="true"
         android:paddingBottom="@dimen/seekbar_bottom_margin" />
 

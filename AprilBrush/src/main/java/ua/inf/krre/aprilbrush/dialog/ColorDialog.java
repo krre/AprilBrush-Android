@@ -104,8 +104,8 @@ public class ColorDialog extends DialogFragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int color = Color.HSVToColor(brushEngine.getOpacity(), hsv);
-                brushEngine.setColor(color);
+                //int color = Color.HSVToColor(brushEngine.getOpacity(), hsv);
+                //brushEngine.setColor(color);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

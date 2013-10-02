@@ -35,8 +35,6 @@ public class MainActivity extends FragmentActivity {
         paintView.setCanvasData(canvasData);
 
         settings = getSharedPreferences(PREFS_NAME, 0);
-        int color = settings.getInt("color", 0xFF000000);
-        brushEngine.setColor(color);
     }
 
     @Override

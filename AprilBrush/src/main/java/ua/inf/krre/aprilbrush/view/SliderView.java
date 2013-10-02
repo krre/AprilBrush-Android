@@ -12,17 +12,26 @@ import java.util.Observer;
 import ua.inf.krre.aprilbrush.R;
 
 public class SliderView extends RelativeLayout {
-    private TextView titleView;
+    private TextView nameView;
     private TextView valueView;
     private SeekBar seekBar;
     private int minValue;
     private int value;
+    private int id;
     private SliderObservable sliderObservable;
 
     public SliderView(Context context) {
         super(context);
         sliderObservable = new SliderObservable();
         initComponent();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getValue() {
@@ -34,11 +43,11 @@ public class SliderView extends RelativeLayout {
     }
 
     public String getTitle() {
-        return titleView.getText().toString();
+        return nameView.getText().toString();
     }
 
     public void setTitle(String title) {
-        titleView.setText(title);
+        nameView.setText(title);
     }
 
     public void setMax(int value) {
@@ -56,7 +65,7 @@ public class SliderView extends RelativeLayout {
     private void initComponent() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.slider, this, true);
-        titleView = (TextView) findViewById(R.id.slider_title_textView);
+        nameView = (TextView) findViewById(R.id.slider_name_textView);
         valueView = (TextView) findViewById(R.id.slider_value_textView);
 
         seekBar = (SeekBar) findViewById(R.id.slider_seekBar);

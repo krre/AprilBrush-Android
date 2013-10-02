@@ -20,14 +20,16 @@ public class BrushData {
 
         list.add(new Brush(res.getString(R.string.brush_size), 1, 50, 7));
         list.add(new Brush(res.getString(R.string.brush_spacing), 1, 100, 25));
-        list.add(new Brush(res.getString(R.string.brush_opacity), 0, 100, 50));
         list.add(new Brush(res.getString(R.string.brush_roundness), 1, 100, 100));
         list.add(new Brush(res.getString(R.string.brush_angle), 0, 360, 0));
 
         list.add(new Brush(res.getString(R.string.color_hue), 0, 360, 0));
         list.add(new Brush(res.getString(R.string.color_saturation), 0, 100, 100));
         list.add(new Brush(res.getString(R.string.color_value), 0, 100, 100));
+        list.add(new Brush(res.getString(R.string.brush_opacity), 0, 100, 50));
     }
+
+    ;
 
     public static BrushData getInstance() {
         return brushData;
@@ -37,17 +39,22 @@ public class BrushData {
         return list;
     }
 
+    // order of the elements is same as adding its to the list
+    public enum Property {
+        SIZE, SPACING, ROUNDNESS, ANGLE, HUE, SATURATION, VALUE, OPACITY
+    }
+
     public class Brush {
         private String name;
         private int minValue;
         private int maxValue;
-        private int defaultValue;
+        private int currentValue;
 
-        public Brush(String name, int minValue, int maxValue, int defaultValue) {
+        public Brush(String name, int minValue, int maxValue, int currentValue) {
             this.name = name;
             this.minValue = minValue;
             this.maxValue = maxValue;
-            this.defaultValue = defaultValue;
+            this.currentValue = currentValue;
         }
 
         public String getName() {
@@ -62,8 +69,12 @@ public class BrushData {
             return maxValue;
         }
 
-        public int getDefaultValue() {
-            return defaultValue;
+        public int getCurrentValue() {
+            return currentValue;
+        }
+
+        public void setCurrentValue(int currentValue) {
+            this.currentValue = currentValue;
         }
     }
 }
