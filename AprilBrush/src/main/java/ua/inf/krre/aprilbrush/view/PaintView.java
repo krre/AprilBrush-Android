@@ -21,7 +21,9 @@ public class PaintView extends View {
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         bitmapPaint = new Paint(Paint.DITHER_FLAG);
-        engine = BrushEngine.getInstance();
+        if (!isInEditMode()) {
+            engine = BrushEngine.getInstance();
+        }
     }
 
     public void setCanvasData(CanvasData canvasData) {
@@ -32,6 +34,10 @@ public class PaintView extends View {
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
+        if (isInEditMode()) {
+            return;
+        }
+
         if (canvasData.getBitmap() == null) {
             Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             canvasData.setBitmap(bitmap);
@@ -41,6 +47,9 @@ public class PaintView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
+        if (isInEditMode()) {
+            return;
+        }
         canvas.drawColor(Color.WHITE);
         canvas.drawBitmap(canvasData.getBitmap(), 0, 0, bitmapPaint);
     }
