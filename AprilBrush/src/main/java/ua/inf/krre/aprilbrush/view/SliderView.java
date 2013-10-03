@@ -42,12 +42,12 @@ public class SliderView extends RelativeLayout {
         seekBar.setProgress(value);
     }
 
-    public String getTitle() {
+    public String getName() {
         return nameView.getText().toString();
     }
 
-    public void setTitle(String title) {
-        nameView.setText(title);
+    public void setName(String name) {
+        nameView.setText(name);
     }
 
     public void setMax(int value) {

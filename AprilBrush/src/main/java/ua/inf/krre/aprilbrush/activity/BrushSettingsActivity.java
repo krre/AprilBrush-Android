@@ -17,7 +17,6 @@ public class BrushSettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.brush_settings);
-//        BrushData brushData = BrushData.getInstance();
         BrushEngine brushEngine = BrushEngine.getInstance();
         List<BrushData.Brush> brushList = brushEngine.getBrushList();
 
@@ -26,7 +25,7 @@ public class BrushSettingsActivity extends Activity {
             SliderView sliderView = new SliderView(getApplicationContext());
             BrushData.Brush brush = brushList.get(i);
 
-            sliderView.setTitle(brush.getName());
+            sliderView.setName(brush.getName());
             sliderView.setMin(brush.getMinValue());
             sliderView.setMax(brush.getMaxValue());
             sliderView.setValue(brush.getCurrentValue());
