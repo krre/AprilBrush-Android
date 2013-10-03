@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -27,7 +29,8 @@ public class BrushEngine implements Observer {
     private float prevX;
     private float prevY;
     private int color;
-    private int alpha;
+    private int[] colors = {0, 0, 0};
+    private float[] positions = {0, 0, 0};
     private List<BrushData.Brush> brushList;
 
     private BrushEngine() {
@@ -70,22 +73,41 @@ public class BrushEngine implements Observer {
         brush.setCurrentValue(value);
 
         BrushData.Property property = property(id);
-        if (property == BrushData.Property.HUE || property == BrushData.Property.SATURATION || property == BrushData.Property.VALUE) {
-            float[] hsv = {value(BrushData.Property.HUE), value(BrushData.Property.SATURATION), value(BrushData.Property.VALUE)};
-            color = Color.HSVToColor(alpha, hsv);
-            paint.setColor(color);
-        }
-
-        if (property == BrushData.Property.OPACITY) {
-            alpha = Math.round((float) value / 100 * 255);
-            paint.setAlpha(alpha);
+        if (property == BrushData.Property.HUE ||
+                property == BrushData.Property.SATURATION ||
+                property == BrushData.Property.VALUE ||
+                property == BrushData.Property.OPACITY ||
+                property == BrushData.Property.HARDNESS) {
+            setupColor();
         }
     }
 
     private void getBrushValues() {
         brushList = BrushData.getInstance().getList();
         brushList = new ArrayList<BrushData.Brush>(brushList);
+        setupColor();
+    }
 
+    private void setupColor() {
+        float hsv[] = new float[3];
+
+        hsv[0] = value(BrushData.Property.HUE);
+        hsv[1] = value(BrushData.Property.SATURATION) / 100f;
+        hsv[2] = value(BrushData.Property.VALUE) / 100f;
+
+        int alpha = Math.round((float) value(BrushData.Property.OPACITY) / 100 * 255);
+        color = Color.HSVToColor(alpha, hsv);
+        float hardness = value(BrushData.Property.HARDNESS) / 100f;
+        // shifting scale from 0...100 to 25...100 to avoid the artifacts at the beginning scale
+        hardness = 0.75f * hardness + 0.25f;
+
+        colors[0] = Color.HSVToColor(alpha, hsv);
+        colors[1] = Color.HSVToColor(Math.round(alpha * hardness), hsv);
+        colors[2] = Color.HSVToColor(0, hsv);
+
+        positions[0] = 0;
+        positions[1] = (float) (Math.sqrt(hardness));
+        positions[2] = 1;
     }
 
     public void setTouch(Canvas canvas, MotionEvent event) {
@@ -139,13 +161,14 @@ public class BrushEngine implements Observer {
     }
 
     private void paintOneDab(float x, float y) {
+        float radius = value(BrushData.Property.SIZE) / 2f;
+        paint.setShader(new RadialGradient(x, y, radius, colors, positions, Shader.TileMode.CLAMP));
         canvas.save();
         int angle = value(BrushData.Property.ANGLE);
         canvas.rotate(angle, x, y);
         int roundness = value(BrushData.Property.ROUNDNESS);
         canvas.scale(1.0f, 100f / roundness, x, y);
-        int size = value(BrushData.Property.SIZE);
-        canvas.drawCircle(x, y, size / 2, paint);
+        canvas.drawCircle(x, y, radius, paint);
         canvas.restore();
     }
 
