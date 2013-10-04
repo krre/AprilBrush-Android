@@ -15,13 +15,15 @@ import java.util.Observable;
 import java.util.Observer;
 
 import ua.inf.krre.aprilbrush.data.BrushData;
+import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.view.SliderView;
 
 public class BrushEngine implements Observer {
-    private static BrushEngine engine = new BrushEngine();
+    private static BrushEngine brushEngine = new BrushEngine();
     private Paint paint;
     private Canvas canvas;
     private Path path;
+    private CanvasData canvasData;
     private PathMeasure pathMeasure;
     private float[] pathMeasurePos = new float[2];
     private float[] pathMeasureTan = new float[2];
@@ -35,7 +37,7 @@ public class BrushEngine implements Observer {
 
     private BrushEngine() {
 
-        paint = new Paint();
+        paint = new Paint(Paint.DITHER_FLAG);
         paint.setAntiAlias(true);
 
         path = new Path();
@@ -45,7 +47,11 @@ public class BrushEngine implements Observer {
     }
 
     public static BrushEngine getInstance() {
-        return engine;
+        return brushEngine;
+    }
+
+    public void setCanvasData(CanvasData canvasData) {
+        this.canvasData = canvasData;
     }
 
     public int getColor() {
@@ -77,6 +83,7 @@ public class BrushEngine implements Observer {
                 property == BrushData.Property.SATURATION ||
                 property == BrushData.Property.VALUE ||
                 property == BrushData.Property.FLOW ||
+                property == BrushData.Property.OPACITY ||
                 property == BrushData.Property.HARDNESS) {
             setupColor();
         }
@@ -107,6 +114,10 @@ public class BrushEngine implements Observer {
         positions[0] = 0;
         positions[1] = (float) (Math.sqrt(hardness));
         positions[2] = 1;
+
+        if (canvasData != null) {
+            canvasData.setOpacity(value(BrushData.Property.OPACITY));
+        }
     }
 
     public void setTouch(Canvas canvas, MotionEvent event) {

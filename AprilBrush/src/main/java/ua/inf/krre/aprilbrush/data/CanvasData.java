@@ -5,13 +5,23 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import ua.inf.krre.aprilbrush.logic.BrushEngine;
+
 public class CanvasData {
     private Bitmap bitmap;
     private Bitmap buffer;
+    private Paint bufferPaint;
     private BrushData brushData;
 
     public CanvasData() {
         brushData = BrushData.getInstance();
+        bufferPaint = new Paint(Paint.DITHER_FLAG);
+        BrushEngine.getInstance().setCanvasData(this);
+        setOpacity(brushData.getProperty(BrushData.Property.OPACITY));
+    }
+
+    public Paint getBufferPaint() {
+        return bufferPaint;
     }
 
     public Bitmap getBuffer() {
@@ -20,6 +30,11 @@ public class CanvasData {
 
     public Bitmap getBitmap() {
         return bitmap;
+    }
+
+    public void setOpacity(int opacity) {
+        int alpha = Math.round((float) opacity / 100 * 255);
+        bufferPaint.setAlpha(alpha);
     }
 
     public void clear() {
