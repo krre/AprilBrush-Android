@@ -99,10 +99,9 @@ public class BrushEngine implements Observer {
         color = Color.HSVToColor(alpha, hsv);
         float hardness = value(BrushData.Property.HARDNESS) / 100f;
         // shifting scale from 0...100 to 25...100 to avoid the artifacts at the beginning scale
-        hardness = 0.75f * hardness + 0.25f;
 
         colors[0] = Color.HSVToColor(alpha, hsv);
-        colors[1] = Color.HSVToColor(Math.round(alpha * hardness), hsv);
+        colors[1] = Color.HSVToColor(alpha, hsv);
         colors[2] = Color.HSVToColor(0, hsv);
 
         positions[0] = 0;
