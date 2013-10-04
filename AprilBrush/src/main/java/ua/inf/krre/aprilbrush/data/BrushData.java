@@ -27,6 +27,7 @@ public class BrushData {
         list.add(new Brush(res.getString(R.string.color_saturation), 0, 100, 0));
         list.add(new Brush(res.getString(R.string.color_value), 0, 100, 0));
         list.add(new Brush(res.getString(R.string.brush_opacity), 0, 100, 50));
+        list.add(new Brush(res.getString(R.string.brush_flow), 0, 100, 100));
     }
 
     public static BrushData getInstance() {
@@ -37,9 +38,14 @@ public class BrushData {
         return list;
     }
 
+    public int getProperty(Property property) {
+        int index = property.ordinal();
+        return list.get(index).getCurrentValue();
+    }
+
     // order of the elements is same as order of adding its to the list
     public enum Property {
-        SIZE, HARDNESS, SPACING, ROUNDNESS, ANGLE, HUE, SATURATION, VALUE, OPACITY
+        SIZE, HARDNESS, SPACING, ROUNDNESS, ANGLE, HUE, SATURATION, VALUE, OPACITY, FLOW
     }
 
     public class Brush {

@@ -31,7 +31,8 @@ public class ColorDialog extends DialogFragment {
         BrushEngine brushEngine = BrushEngine.getInstance();
         List<BrushData.Brush> brushList = brushEngine.getBrushList();
 
-        for (int i = brushList.size() - 4; i < brushList.size(); i++) {
+        int colorsPropertyNum = 5;
+        for (int i = brushList.size() - colorsPropertyNum; i < brushList.size(); i++) {
             SliderView sliderView = new SliderView(context);
             BrushData.Brush brush = brushList.get(i);
 

@@ -76,7 +76,7 @@ public class BrushEngine implements Observer {
         if (property == BrushData.Property.HUE ||
                 property == BrushData.Property.SATURATION ||
                 property == BrushData.Property.VALUE ||
-                property == BrushData.Property.OPACITY ||
+                property == BrushData.Property.FLOW ||
                 property == BrushData.Property.HARDNESS) {
             setupColor();
         }
@@ -95,7 +95,7 @@ public class BrushEngine implements Observer {
         hsv[1] = value(BrushData.Property.SATURATION) / 100f;
         hsv[2] = value(BrushData.Property.VALUE) / 100f;
 
-        int alpha = Math.round((float) value(BrushData.Property.OPACITY) / 100 * 255);
+        int alpha = Math.round((float) value(BrushData.Property.FLOW) / 100 * 255);
         color = Color.HSVToColor(alpha, hsv);
         float hardness = value(BrushData.Property.HARDNESS) / 100f;
         // shifting scale from 0...100 to 25...100 to avoid the artifacts at the beginning scale

@@ -40,6 +40,7 @@ public class SliderView extends RelativeLayout {
 
     public void setValue(int value) {
         seekBar.setProgress(value);
+        valueView.setText(String.format("%d", value));
     }
 
     public String getName() {
