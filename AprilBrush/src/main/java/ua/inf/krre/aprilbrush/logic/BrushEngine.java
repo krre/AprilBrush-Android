@@ -172,13 +172,23 @@ public class BrushEngine implements Observer {
 
     private void paintOneDab(float x, float y) {
         float radius = value(BrushData.Property.SIZE) / 2f;
+
+        float scatter = value(BrushData.Property.SCATTER) / 100f;
+        x += radius * 2 * scatter * (1 - 2 * (float) Math.random());
+        y += radius * 2 * scatter * (1 - 2 * (float) Math.random());
+
         paint.setShader(new RadialGradient(x, y, radius, colors, positions, Shader.TileMode.CLAMP));
+
         canvas.save();
+
         int angle = value(BrushData.Property.ANGLE);
         canvas.rotate(angle, x, y);
+
         int roundness = value(BrushData.Property.ROUNDNESS);
         canvas.scale(1.0f, 100f / roundness, x, y);
+
         canvas.drawCircle(x, y, radius, paint);
+
         canvas.restore();
     }
 

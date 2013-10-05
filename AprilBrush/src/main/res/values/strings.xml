@@ -16,6 +16,7 @@
     <string name="brush_spacing">Spacing</string>
     <string name="brush_roundness">Roundness</string>
     <string name="brush_angle">Angle</string>
+    <string name="brush_scatter">Scatter</string>
     <string name="brush_opacity">Opacity</string>
     <string name="brush_flow">Flow</string>
 
