@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.data.CanvasData;
@@ -13,17 +15,29 @@ import ua.inf.krre.aprilbrush.dialog.ColorDialog;
 import ua.inf.krre.aprilbrush.logic.BrushEngine;
 import ua.inf.krre.aprilbrush.view.PaintView;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
     public static final String PREFS_NAME = "prefs";
-    CanvasData canvasData;
-    ColorDialog colorDialog;
-    BrushEngine brushEngine;
-    SharedPreferences settings;
+    private CanvasData canvasData;
+    private ColorDialog colorDialog;
+    private BrushEngine brushEngine;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.main);
+
+        ImageButton undoButton = (ImageButton) findViewById(R.id.undoImageButton);
+        undoButton.setOnClickListener(this);
+        ImageButton brushButton = (ImageButton) findViewById(R.id.brushImageButton);
+        brushButton.setOnClickListener(this);
+        ImageButton colorButton = (ImageButton) findViewById(R.id.colorImageButton);
+        colorButton.setOnClickListener(this);
+        ImageButton fillButton = (ImageButton) findViewById(R.id.fillImageButton);
+        fillButton.setOnClickListener(this);
+        ImageButton redoButton = (ImageButton) findViewById(R.id.redoImageButton);
+        redoButton.setOnClickListener(this);
 
         brushEngine = BrushEngine.getInstance();
 
@@ -35,6 +49,29 @@ public class MainActivity extends FragmentActivity {
         paintView.setCanvasData(canvasData);
 
         settings = getSharedPreferences(PREFS_NAME, 0);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.undoImageButton:
+                break;
+            case R.id.brushImageButton:
+                Intent intent = new Intent(this, BrushSettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.colorImageButton:
+                colorDialog = new ColorDialog();
+                colorDialog.show(getSupportFragmentManager(), "color");
+                break;
+            case R.id.fillImageButton:
+                canvasData.clear();
+                PaintView paintView = (PaintView) findViewById(R.id.paintView);
+                paintView.invalidate();
+                break;
+            case R.id.redoImageButton:
+                break;
+        }
     }
 
     @Override
