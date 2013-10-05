@@ -19,5 +19,6 @@
     <string name="brush_scatter">Scatter</string>
     <string name="brush_opacity">Opacity</string>
     <string name="brush_flow">Flow</string>
+    <string name="slider_value">100</string>
 
 </resources>

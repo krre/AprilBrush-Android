@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_all_margin">
+    android:paddingLeft="2dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -12,27 +12,26 @@
         android:text="@string/color_hue"
         android:id="@+id/slider_name_textView"
         android:layout_gravity="left|center_vertical"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp" />
+        android:layout_centerHorizontal="true" />
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/slider_seekBar"
-        android:layout_below="@+id/slider_name_textView"
-        android:layout_alignParentLeft="true"
-        android:paddingBottom="@dimen/seekbar_bottom_margin" />
+        android:paddingBottom="@dimen/seekbar_bottom_margin"
+        android:layout_alignTop="@+id/slider_value_textView"
+        android:layout_toLeftOf="@+id/slider_value_textView" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:textAppearance="@android:style/TextAppearance.Small"
-        android:text="@string/color_hue"
+        android:text="@string/slider_value"
         android:id="@+id/slider_value_textView"
         android:layout_gravity="left|center_vertical"
-        android:layout_above="@+id/slider_seekBar"
-        android:layout_alignRight="@+id/slider_seekBar" />
+        android:layout_below="@+id/slider_name_textView"
+        android:layout_alignParentRight="true"
+        android:gravity="center_horizontal" />
 
-</merge>
+</RelativeLayout>
