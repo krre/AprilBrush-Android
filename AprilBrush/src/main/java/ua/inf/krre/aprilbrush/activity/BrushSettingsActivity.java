@@ -32,7 +32,7 @@ public class BrushSettingsActivity extends Activity {
         layout.setOrientation(LinearLayout.VERTICAL);
         int padding = getResources().getDimensionPixelSize(R.dimen.brush_settings_padding);
         layout.setPadding(padding, padding, padding, padding);
-        
+
         scrollView.addView(layout, scrollViewParams);
 
         for (int i = 0; i < brushList.size(); i++) {

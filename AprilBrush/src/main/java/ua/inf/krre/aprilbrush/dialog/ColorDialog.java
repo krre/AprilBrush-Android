@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ColorDialog extends DialogFragment {
         Context context = getActivity().getApplicationContext();
         Resources resources = context.getResources();
 
+        /*
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
         int padding = resources.getDimensionPixelSize(R.dimen.activity_all_margin);
@@ -44,9 +46,12 @@ public class ColorDialog extends DialogFragment {
             sliderView.addObserver(brushEngine);
             layout.addView(sliderView);
         }
+*/
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(layout);
+        builder.setView(inflater.inflate(R.layout.colorpicker, null));
         builder.setMessage(resources.getString(R.string.action_color));
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
