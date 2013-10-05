@@ -8,14 +8,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
-
-import java.util.List;
 
 import ua.inf.krre.aprilbrush.R;
-import ua.inf.krre.aprilbrush.data.BrushData;
-import ua.inf.krre.aprilbrush.logic.BrushEngine;
-import ua.inf.krre.aprilbrush.view.SliderView;
 
 public class ColorDialog extends DialogFragment {
 
@@ -47,7 +41,7 @@ public class ColorDialog extends DialogFragment {
             layout.addView(sliderView);
         }
 */
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

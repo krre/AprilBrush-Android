@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
@@ -36,6 +38,7 @@ public class ColorPickerView extends View {
         canvas.drawCircle(x, y, 150, paint);
         paint.reset();
         paint.setAntiAlias(true);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         paint.setColor(Color.WHITE);
         canvas.drawCircle(x, y, 100, paint);
 
