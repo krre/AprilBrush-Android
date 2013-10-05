@@ -22,7 +22,7 @@ public class BrushData {
         list.add(new Brush(res.getString(R.string.brush_hardness), 0, 100, 80));
         list.add(new Brush(res.getString(R.string.brush_spacing), 1, 100, 15));
         list.add(new Brush(res.getString(R.string.brush_roundness), 1, 100, 100));
-        list.add(new Brush(res.getString(R.string.brush_angle), 0, 360, 0));
+        list.add(new Brush(res.getString(R.string.brush_angle), 0, 180, 0));
         list.add(new Brush(res.getString(R.string.color_hue), 0, 360, 0));
         list.add(new Brush(res.getString(R.string.color_saturation), 0, 100, 0));
         list.add(new Brush(res.getString(R.string.color_value), 0, 100, 0));
