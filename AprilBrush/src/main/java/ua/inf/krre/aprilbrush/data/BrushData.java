@@ -27,8 +27,8 @@ public class BrushData {
         list.add(new Brush(res.getString(R.string.color_hue), 0, 360, 0));
         list.add(new Brush(res.getString(R.string.color_saturation), 0, 100, 0));
         list.add(new Brush(res.getString(R.string.color_value), 0, 100, 0));
-        list.add(new Brush(res.getString(R.string.brush_opacity), 0, 100, 50));
-        list.add(new Brush(res.getString(R.string.brush_flow), 0, 100, 100));
+        list.add(new Brush(res.getString(R.string.brush_opacity), 0, 100, 90));
+        list.add(new Brush(res.getString(R.string.brush_flow), 0, 100, 25));
     }
 
     public static BrushData getInstance() {

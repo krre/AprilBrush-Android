@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_all_margin">16dp</dimen>
     <dimen name="seekbar_bottom_margin">16dp</dimen>
+    <dimen name="brush_settings_padding">5dp</dimen>
 </resources>
