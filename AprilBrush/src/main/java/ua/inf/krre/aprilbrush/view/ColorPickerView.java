@@ -20,12 +20,12 @@ public class ColorPickerView extends View {
 
     public ColorPickerView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         viewSize = Math.min(w, h);
-
         if (viewSize > 0) {
             createColorRing(viewSize);
         }
