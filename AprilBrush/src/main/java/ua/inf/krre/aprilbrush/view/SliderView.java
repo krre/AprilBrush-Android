@@ -1,6 +1,7 @@
 package ua.inf.krre.aprilbrush.view;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -12,9 +13,9 @@ import java.util.Observer;
 import ua.inf.krre.aprilbrush.R;
 
 public class SliderView extends RelativeLayout {
+    protected SeekBar seekBar;
     private TextView nameView;
     private TextView valueView;
-    private SeekBar seekBar;
     private int minValue;
     private int value;
     private int id;
@@ -24,6 +25,16 @@ public class SliderView extends RelativeLayout {
         super(context);
         sliderObservable = new SliderObservable();
         initComponent();
+    }
+
+    public SliderView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        sliderObservable = new SliderObservable();
+        initComponent();
+    }
+
+    public SeekBar getSeekBar() {
+        return seekBar;
     }
 
     public int getId() {
