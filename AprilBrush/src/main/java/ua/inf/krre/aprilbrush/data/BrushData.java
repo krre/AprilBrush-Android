@@ -10,6 +10,7 @@ import ua.inf.krre.aprilbrush.AppAprilBrush;
 import ua.inf.krre.aprilbrush.R;
 
 public class BrushData {
+    public static final String PREF_ITEM_NAME = "Brush";
     private static final BrushData brushData = new BrushData();
     private List<Brush> list;
 

@@ -1,7 +1,6 @@
 package ua.inf.krre.aprilbrush.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -9,18 +8,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import ua.inf.krre.aprilbrush.R;
+import ua.inf.krre.aprilbrush.data.BrushData;
 import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.dialog.ColorDialog;
-import ua.inf.krre.aprilbrush.logic.BrushEngine;
+import ua.inf.krre.aprilbrush.logic.JSONSharedPreferences;
 import ua.inf.krre.aprilbrush.view.PaintView;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     public static final String PREFS_NAME = "prefs";
     private CanvasData canvasData;
     private ColorDialog colorDialog;
-    private BrushEngine brushEngine;
-    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageButton redoButton = (ImageButton) findViewById(R.id.redoImageButton);
         redoButton.setOnClickListener(this);
 
-        brushEngine = BrushEngine.getInstance();
-
         canvasData = (CanvasData) getLastNonConfigurationInstance();
         if (canvasData == null) {
             canvasData = new CanvasData();
@@ -48,7 +47,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         PaintView paintView = (PaintView) findViewById(R.id.paintView);
         paintView.setCanvasData(canvasData);
 
-        settings = getSharedPreferences(PREFS_NAME, 0);
+        try {
+            JSONSharedPreferences.loadJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME);
+        } catch (JSONException e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -109,8 +112,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("color", brushEngine.getColor());
-        editor.commit();
+        JSONSharedPreferences.saveJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME, new JSONArray(BrushData.getInstance().getList()));
     }
 }
