@@ -48,11 +48,15 @@ public class ColorPickerView extends View {
         brushEngine = BrushEngine.getInstance();
     }
 
+    public float[] getHsv() {
+        return hsv;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         containerWidth = Math.min(w, h);
         if (containerWidth > 0) {
-            Color.colorToHSV(brushEngine.getColor(), hsv);
+            hsv = brushEngine.getHsv();
             drawColorPicker(containerWidth);
 
             View colorPickerLayout = (View) getParent();

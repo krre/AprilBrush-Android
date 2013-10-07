@@ -30,9 +30,10 @@ public class BrushEngine implements Observer {
     private float pathLength;
     private float prevX;
     private float prevY;
-    private int color;
-    private int[] colors = {0, 0, 0};
-    private float[] positions = {0, 0, 0};
+    private float hsv[] = new float[3];
+    private int alpha;
+    private int[] colors = new int[3];
+    private float[] positions = new float[3];
     private List<BrushData.Brush> brushList;
 
     private BrushEngine() {
@@ -50,16 +51,17 @@ public class BrushEngine implements Observer {
         return brushEngine;
     }
 
+    public float[] getHsv() {
+        return hsv;
+    }
+
+    public void setHsv(float[] hsv) {
+        this.hsv = hsv;
+        setBrushColors();
+    }
+
     public void setCanvasData(CanvasData canvasData) {
         this.canvasData = canvasData;
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
     }
 
     public List<BrushData.Brush> getBrushList() {
@@ -100,20 +102,15 @@ public class BrushEngine implements Observer {
     }
 
     private void setupColor() {
-        float hsv[] = new float[3];
 
         hsv[0] = value(BrushData.Property.HUE);
         hsv[1] = value(BrushData.Property.SATURATION) / 100f;
         hsv[2] = value(BrushData.Property.VALUE) / 100f;
 
-        int alpha = Math.round((float) value(BrushData.Property.FLOW) / 100 * 255);
-        color = Color.HSVToColor(alpha, hsv);
+        alpha = Math.round((float) value(BrushData.Property.FLOW) / 100 * 255);
         float hardness = value(BrushData.Property.HARDNESS) / 100f;
-        // shifting scale from 0...100 to 25...100 to avoid the artifacts at the beginning scale
 
-        colors[0] = Color.HSVToColor(alpha, hsv);
-        colors[1] = Color.HSVToColor(alpha, hsv);
-        colors[2] = Color.HSVToColor(0, hsv);
+        setBrushColors();
 
         positions[0] = 0;
         positions[1] = (float) (Math.sqrt(hardness));
@@ -122,6 +119,12 @@ public class BrushEngine implements Observer {
         if (canvasData != null) {
             canvasData.setOpacity(value(BrushData.Property.OPACITY));
         }
+    }
+
+    private void setBrushColors() {
+        colors[0] = Color.HSVToColor(alpha, hsv);
+        colors[1] = Color.HSVToColor(alpha, hsv);
+        colors[2] = Color.HSVToColor(0, hsv);
     }
 
     public void setTouch(Canvas canvas, MotionEvent event) {
