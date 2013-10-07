@@ -58,6 +58,10 @@ public class BrushEngine implements Observer {
         return color;
     }
 
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public List<BrushData.Brush> getBrushList() {
 
         return brushList;
