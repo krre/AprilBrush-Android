@@ -58,6 +58,9 @@ public class BrushEngine implements Observer {
     public void setHsv(float[] hsv) {
         this.hsv = hsv;
         setBrushColors();
+        setValue(BrushData.Property.HUE, (int)hsv[0]);
+        setValue(BrushData.Property.SATURATION, (int)(hsv[1] * 100));
+        setValue(BrushData.Property.VALUE, (int)(hsv[2] * 100));
     }
 
     public void setCanvasData(CanvasData canvasData) {
@@ -71,6 +74,11 @@ public class BrushEngine implements Observer {
 
     private int value(BrushData.Property property) {
         return brushList.get(property.ordinal()).getCurrentValue();
+    }
+
+    private void setValue(BrushData.Property property, int value) {
+        BrushData.Brush brush = brushList.get(property.ordinal());
+        brush.setCurrentValue(value);
     }
 
     private BrushData.Property property(int ordinal) {
