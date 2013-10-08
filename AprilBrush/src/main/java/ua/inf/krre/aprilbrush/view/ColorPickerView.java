@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import ua.inf.krre.aprilbrush.R;
-import ua.inf.krre.aprilbrush.logic.BrushEngine;
 
 public class ColorPickerView extends View {
     private final static float RING_RATIO = 0.7f;
@@ -57,9 +56,9 @@ public class ColorPickerView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        int containerWidth = Math.min(w, h);
+        float containerWidth = Math.min(w, h);
         if (containerWidth > 0) {
-            xyOrigin = containerWidth / 2f;
+            xyOrigin = containerWidth / 2;
             drawColorPicker(containerWidth);
 
             View colorPickerLayout = (View) getParent();
@@ -67,7 +66,7 @@ public class ColorPickerView extends View {
         }
     }
 
-    private void drawColorPicker(int width) {
+    private void drawColorPicker(float width) {
         drawColorRing(width);
 
         rectSize = (float) (width * RING_RATIO / Math.sqrt(2f));
@@ -83,12 +82,12 @@ public class ColorPickerView extends View {
         innerRingRadius = outerRingRadius * RING_RATIO;
     }
 
-    private void drawColorRing(int width) {
-        ringBitmap = Bitmap.createBitmap(width, width, Bitmap.Config.ARGB_8888);
+    private void drawColorRing(float width) {
+        ringBitmap = Bitmap.createBitmap((int) width, (int) width, Bitmap.Config.ARGB_8888);
         ringBitmap.eraseColor(Color.TRANSPARENT);
         Canvas canvas = new Canvas(ringBitmap);
 
-        int center = width / 2;
+        float center = width / 2;
         Shader ringShader = new SweepGradient(center, center, gradientColors(), null);
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -121,8 +120,8 @@ public class ColorPickerView extends View {
     }
 
     private void drawHueSelector(Canvas canvas) {
-        int selectorWidth = (int) (rectSize * (1 - RING_RATIO));
-        int selectorHeight = (int) (rectSize / 30);
+        float selectorWidth = rectSize * (1 - RING_RATIO);
+        float selectorHeight = rectSize / 30;
 
         canvas.save();
         canvas.translate(xyOrigin, xyOrigin);
@@ -132,7 +131,7 @@ public class ColorPickerView extends View {
     }
 
     private void drawSatValSelector(Canvas canvas) {
-        int circleSize = Math.round(rectSize / 20);
+        float circleSize = Math.round(rectSize / 20);
 
         canvas.save();
         canvas.translate(xyOrigin - rectSize / 2, xyOrigin + rectSize / 2);
