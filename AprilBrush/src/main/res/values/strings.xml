@@ -21,4 +21,9 @@
     <string name="brush_flow">Flow</string>
     <string name="slider_value">100</string>
 
+    <string name="message_new_picture">"New picture"</string>
+    <string name="message_load_picture">"Picture loaded"</string>
+    <string name="message_save_picture">"Picture saved"</string>
+
+
 </resources>

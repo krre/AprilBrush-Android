@@ -1,6 +1,7 @@
 package ua.inf.krre.aprilbrush.data;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,12 +9,14 @@ import android.graphics.Paint;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import ua.inf.krre.aprilbrush.AppAprilBrush;
+import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.logic.UndoManager;
 
 public class CanvasData {
@@ -24,8 +27,12 @@ public class CanvasData {
     private BrushData brushData;
     private UndoManager undoManager;
     private String filename;
+    private Context context;
+    private Resources resources;
 
     private CanvasData() {
+        context = AppAprilBrush.getContext();
+        resources = context.getResources();
         brushData = BrushData.getInstance();
         undoManager = UndoManager.getInstance();
         bufferPaint = new Paint(Paint.DITHER_FLAG);
@@ -74,16 +81,15 @@ public class CanvasData {
         undoManager.clear();
         undoManager.add(bitmap);
         filename = System.currentTimeMillis() + ".png";
-        Log.d("AB", "new");
+
+        Toast.makeText(context, resources.getString(R.string.message_new_picture), Toast.LENGTH_SHORT).show();
     }
 
     public void loadImage() {
-        Log.d("AB", "loaded");
+        Toast.makeText(context, resources.getString(R.string.message_load_picture), Toast.LENGTH_SHORT).show();
     }
 
     public void saveImage() {
-        Context context = AppAprilBrush.getContext();
-
         String path = Environment.getExternalStorageDirectory().toString() + "/AprilBrush";
         File dir = new File(path);
         if (!dir.exists()) {
@@ -101,6 +107,8 @@ public class CanvasData {
         } catch (Exception e) {
             Log.d("Image Writer", "Problem with the image. Stacktrace: ", e);
         }
+
+        Toast.makeText(context, resources.getString(R.string.message_save_picture), Toast.LENGTH_SHORT).show();
     }
 
     public void applyBuffer() {
