@@ -11,7 +11,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,33 +31,35 @@ public class ColorPickerView extends View {
     private Bitmap ringBitmap;
     private Bitmap satBitmap;
     private Bitmap valBitmap;
-    private Bitmap satValSelectorBitmap;
     private Canvas satCanvas;
     private float outerRingRadius;
     private float innerRingRadius;
-    private int containerWidth;
     private float rectSize;
     private float[] hsv = new float[3];
-    private BrushEngine brushEngine;
     private float xyRect;
     private float xyOrigin;
 
     public ColorPickerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        brushEngine = BrushEngine.getInstance();
         paint.setColor(Color.WHITE);
+        int strokeWidth = 3;
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(strokeWidth);
     }
 
     public float[] getHsv() {
         return hsv;
     }
 
+    public void setHsv(float[] hsv) {
+        System.arraycopy(hsv, 0, this.hsv, 0, hsv.length);
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        containerWidth = Math.min(w, h);
+        int containerWidth = Math.min(w, h);
         if (containerWidth > 0) {
             xyOrigin = containerWidth / 2f;
-            hsv = brushEngine.getHsv();
             drawColorPicker(containerWidth);
 
             View colorPickerLayout = (View) getParent();
@@ -77,8 +78,6 @@ public class ColorPickerView extends View {
 
         drawSatRectangle(rectSize);
         drawValRectangle(rectSize);
-
-        drawSatValSelector(rectSize);
 
         outerRingRadius = width / 2;
         innerRingRadius = outerRingRadius * RING_RATIO;
@@ -132,20 +131,13 @@ public class ColorPickerView extends View {
         canvas.restore();
     }
 
-    private void drawSatValSelector(float width) {
-        int strokeWidth = 3;
+    private void drawSatValSelector(Canvas canvas) {
+        int circleSize = Math.round(rectSize / 20);
 
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth);
-        paint.setColor(Color.WHITE);
-
-        int circleSize = Math.round(width / 10);
-        satValSelectorBitmap = Bitmap.createBitmap(circleSize, circleSize, Bitmap.Config.ARGB_8888);
-        satValSelectorBitmap.eraseColor(Color.TRANSPARENT);
-
-        Canvas canvas = new Canvas(satValSelectorBitmap);
-        canvas.drawCircle(circleSize / 2f, circleSize / 2f, (circleSize - strokeWidth) / 2, paint);
+        canvas.save();
+        canvas.translate(xyOrigin - rectSize / 2, xyOrigin + rectSize / 2);
+        canvas.drawCircle(rectSize * hsv[SATURATION], -rectSize * hsv[VALUE], circleSize, paint);
+        canvas.restore();
     }
 
     int[] gradientColors() {
@@ -167,7 +159,7 @@ public class ColorPickerView extends View {
         canvas.drawBitmap(satBitmap, xyRect, xyRect, paint);
         canvas.drawBitmap(valBitmap, xyRect, xyRect, paint);
         drawHueSelector(canvas);
-        canvas.drawBitmap(satValSelectorBitmap, xyOrigin, xyOrigin, paint);
+        drawSatValSelector(canvas);
     }
 
     @Override
@@ -175,7 +167,6 @@ public class ColorPickerView extends View {
         // origin moved to the center of color ring
         float x = event.getX() - xyOrigin;
         float y = xyOrigin - event.getY();
-        Log.d("AB", "origin: x = " + x + " y = " + y);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:

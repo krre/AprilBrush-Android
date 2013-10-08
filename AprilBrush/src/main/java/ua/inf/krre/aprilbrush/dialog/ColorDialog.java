@@ -12,11 +12,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import ua.inf.krre.aprilbrush.R;
-import ua.inf.krre.aprilbrush.data.BrushData;
 import ua.inf.krre.aprilbrush.logic.BrushEngine;
 import ua.inf.krre.aprilbrush.view.ColorPickerView;
 
 public class ColorDialog extends DialogFragment {
+
+    private ColorPickerView colorPickerView;
+    private BrushEngine brushEngine;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -25,7 +27,10 @@ public class ColorDialog extends DialogFragment {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.colorpicker, null);
 
-        final BrushEngine brushEngine = BrushEngine.getInstance();
+        colorPickerView = (ColorPickerView) layout.findViewById(R.id.colorPickerView);
+
+
+        brushEngine = BrushEngine.getInstance();
         int color = Color.HSVToColor(brushEngine.getHsv());
 
         ImageView colorPrevImageView = (ImageView) layout.findViewById(R.id.colorPrevImageView);
@@ -39,7 +44,6 @@ public class ColorDialog extends DialogFragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ColorPickerView colorPickerView = (ColorPickerView) layout.findViewById(R.id.colorPickerView);
                 brushEngine.setHsv(colorPickerView.getHsv());
             }
         });
@@ -51,6 +55,12 @@ public class ColorDialog extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        colorPickerView.setHsv(brushEngine.getHsv());
     }
 }
 
