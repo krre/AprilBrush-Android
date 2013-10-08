@@ -24,15 +24,14 @@ public class ColorPickerView extends View {
     private final static int HUE = 0;
     private final static int SATURATION = 1;
     private final static int VALUE = 2;
-    boolean hueGrab = false;
-    boolean satValGrab = false;
-    ImageView colorNewImageView;
+    private boolean hueGrab = false;
+    private boolean satValGrab = false;
+    private ImageView colorNewImageView;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint satPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Bitmap ringBitmap;
     private Bitmap satBitmap;
     private Bitmap valBitmap;
-    private Bitmap hueSelectorBitmap;
     private Bitmap satValSelectorBitmap;
     private Canvas satCanvas;
     private float outerRingRadius;
@@ -42,10 +41,12 @@ public class ColorPickerView extends View {
     private float[] hsv = new float[3];
     private BrushEngine brushEngine;
     private float xyRect;
+    private float xyOrigin;
 
     public ColorPickerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         brushEngine = BrushEngine.getInstance();
+        paint.setColor(Color.WHITE);
     }
 
     public float[] getHsv() {
@@ -56,6 +57,7 @@ public class ColorPickerView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         containerWidth = Math.min(w, h);
         if (containerWidth > 0) {
+            xyOrigin = containerWidth / 2f;
             hsv = brushEngine.getHsv();
             drawColorPicker(containerWidth);
 
@@ -76,7 +78,6 @@ public class ColorPickerView extends View {
         drawSatRectangle(rectSize);
         drawValRectangle(rectSize);
 
-        drawHueSelector(rectSize);
         drawSatValSelector(rectSize);
 
         outerRingRadius = width / 2;
@@ -120,12 +121,15 @@ public class ColorPickerView extends View {
         canvas.drawRect(0, 0, width, width, paint);
     }
 
-    private void drawHueSelector(float width) {
-        int selectorWidth = (int) (width * (1 - RING_RATIO));
-        int selectorHeight = (int) (width / 30);
+    private void drawHueSelector(Canvas canvas) {
+        int selectorWidth = (int) (rectSize * (1 - RING_RATIO));
+        int selectorHeight = (int) (rectSize / 30);
 
-        hueSelectorBitmap = Bitmap.createBitmap(selectorWidth, selectorHeight, Bitmap.Config.ARGB_8888);
-        hueSelectorBitmap.eraseColor(Color.WHITE);
+        canvas.save();
+        canvas.translate(xyOrigin, xyOrigin);
+        canvas.rotate(hsv[HUE]);
+        canvas.drawRect(innerRingRadius, 0, selectorWidth + innerRingRadius, selectorHeight, paint);
+        canvas.restore();
     }
 
     private void drawSatValSelector(float width) {
@@ -162,15 +166,15 @@ public class ColorPickerView extends View {
         canvas.drawBitmap(ringBitmap, 0, 0, paint);
         canvas.drawBitmap(satBitmap, xyRect, xyRect, paint);
         canvas.drawBitmap(valBitmap, xyRect, xyRect, paint);
-        canvas.drawBitmap(hueSelectorBitmap, 0, 0, paint);
-        canvas.drawBitmap(satValSelectorBitmap, 0, 0, paint);
+        drawHueSelector(canvas);
+        canvas.drawBitmap(satValSelectorBitmap, xyOrigin, xyOrigin, paint);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // origin moved to the center of color ring
-        float x = event.getX() - containerWidth / 2;
-        float y = containerWidth / 2 - event.getY();
+        float x = event.getX() - xyOrigin;
+        float y = xyOrigin - event.getY();
         Log.d("AB", "origin: x = " + x + " y = " + y);
 
         switch (event.getAction()) {
