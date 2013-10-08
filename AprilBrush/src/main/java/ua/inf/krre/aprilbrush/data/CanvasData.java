@@ -1,11 +1,13 @@
 package ua.inf.krre.aprilbrush.data;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -107,6 +109,8 @@ public class CanvasData {
         } catch (Exception e) {
             Log.d("Image Writer", "Problem with the image. Stacktrace: ", e);
         }
+
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
         Toast.makeText(context, resources.getString(R.string.message_save_picture), Toast.LENGTH_SHORT).show();
     }
