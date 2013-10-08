@@ -16,12 +16,14 @@ import ua.inf.krre.aprilbrush.data.BrushData;
 import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.dialog.ColorDialog;
 import ua.inf.krre.aprilbrush.logic.JSONSharedPreferences;
+import ua.inf.krre.aprilbrush.logic.UndoManager;
 import ua.inf.krre.aprilbrush.view.PaintView;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     public static final String PREFS_NAME = "prefs";
-    private CanvasData canvasData;
     private ColorDialog colorDialog;
+    private UndoManager undoManager;
+    private PaintView paintView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,72 +42,39 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageButton redoButton = (ImageButton) findViewById(R.id.redoImageButton);
         redoButton.setOnClickListener(this);
 
-        canvasData = (CanvasData) getLastNonConfigurationInstance();
-        if (canvasData == null) {
-            canvasData = new CanvasData();
-        }
-        PaintView paintView = (PaintView) findViewById(R.id.paintView);
-        paintView.setCanvasData(canvasData);
-
         try {
             JSONSharedPreferences.loadJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME);
         } catch (JSONException e) {
             throw new RuntimeException();
         }
+
+        undoManager = UndoManager.getInstance();
+        paintView = (PaintView) findViewById(R.id.paintView);
+        colorDialog = new ColorDialog();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.undoImageButton:
+                undoManager.undo();
+                paintView.invalidate();
                 break;
             case R.id.brushImageButton:
                 Intent intent = new Intent(this, BrushSettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.colorImageButton:
-                colorDialog = new ColorDialog();
                 colorDialog.show(getSupportFragmentManager(), "color");
                 break;
             case R.id.fillImageButton:
-                canvasData.clear();
-                PaintView paintView = (PaintView) findViewById(R.id.paintView);
+                CanvasData.getInstance().clear();
                 paintView.invalidate();
                 break;
             case R.id.redoImageButton:
-                break;
-        }
-    }
-
-    @Override
-    public void setRequestedOrientation(int requestedOrientation) {
-        super.setRequestedOrientation(requestedOrientation);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_clear:
-                canvasData.clear();
-                PaintView paintView = (PaintView) findViewById(R.id.paintView);
+                undoManager.redo();
                 paintView.invalidate();
-                return true;
-            case R.id.action_color:
-                colorDialog = new ColorDialog();
-                colorDialog.show(getSupportFragmentManager(), "color");
-                return true;
-            case R.id.action_brush:
-                Intent intent = new Intent(this, BrushSettingsActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
     }
 

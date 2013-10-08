@@ -5,19 +5,25 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import ua.inf.krre.aprilbrush.logic.BrushEngine;
+import ua.inf.krre.aprilbrush.logic.UndoManager;
 
 public class CanvasData {
+    private static CanvasData canvasData = new CanvasData();
     private Bitmap bitmap;
     private Bitmap buffer;
     private Paint bufferPaint;
     private BrushData brushData;
+    private UndoManager undoManager;
 
-    public CanvasData() {
+    private CanvasData() {
         brushData = BrushData.getInstance();
+        undoManager = UndoManager.getInstance();
         bufferPaint = new Paint(Paint.DITHER_FLAG);
-        BrushEngine.getInstance().setCanvasData(this);
         setOpacity(brushData.getProperty(BrushData.Property.OPACITY));
+    }
+
+    public static CanvasData getInstance() {
+        return canvasData;
     }
 
     public Paint getBufferPaint() {
@@ -32,6 +38,10 @@ public class CanvasData {
         return bitmap;
     }
 
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = Bitmap.createBitmap(bitmap);
+    }
+
     public void setOpacity(int opacity) {
         int alpha = Math.round((float) opacity / 100 * 255);
         bufferPaint.setAlpha(alpha);
@@ -39,11 +49,13 @@ public class CanvasData {
 
     public void clear() {
         bitmap.eraseColor(Color.WHITE);
+        undoManager.add(bitmap);
     }
 
     public void createBitmaps(int width, int height) {
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         buffer = Bitmap.createBitmap(bitmap);
+        undoManager.add(bitmap);
     }
 
     public void applyBuffer() {
@@ -53,5 +65,7 @@ public class CanvasData {
         paint.setAlpha(alpha);
         canvas.drawBitmap(buffer, 0, 0, paint);
         buffer.eraseColor(Color.TRANSPARENT);
+
+        undoManager.add(bitmap);
     }
 }

@@ -37,6 +37,8 @@ public class BrushEngine implements Observer {
     private List<BrushData.Brush> brushList;
 
     private BrushEngine() {
+        canvasData = CanvasData.getInstance();
+
         paint = new Paint(Paint.DITHER_FLAG);
         paint.setAntiAlias(true);
 
@@ -61,10 +63,6 @@ public class BrushEngine implements Observer {
         setValue(BrushData.Property.HUE, (int) hsv[0]);
         setValue(BrushData.Property.SATURATION, (int) (hsv[1] * 100));
         setValue(BrushData.Property.VALUE, (int) (hsv[2] * 100));
-    }
-
-    public void setCanvasData(CanvasData canvasData) {
-        this.canvasData = canvasData;
     }
 
     public List<BrushData.Brush> getBrushList() {

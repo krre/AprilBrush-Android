@@ -19,14 +19,11 @@ public class PaintView extends View {
 
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        canvasData = CanvasData.getInstance();
         bitmapPaint = new Paint(Paint.DITHER_FLAG);
         if (!isInEditMode()) {
             engine = BrushEngine.getInstance();
         }
-    }
-
-    public void setCanvasData(CanvasData canvasData) {
-        this.canvasData = canvasData;
     }
 
     @Override
