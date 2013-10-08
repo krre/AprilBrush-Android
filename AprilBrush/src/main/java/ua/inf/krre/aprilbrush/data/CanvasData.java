@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -28,9 +29,10 @@ public class CanvasData {
     private Paint bufferPaint;
     private BrushData brushData;
     private UndoManager undoManager;
-    private String filename;
     private Context context;
     private Resources resources;
+    private String imageFolderPath;
+    private String imagePath;
 
     private CanvasData() {
         context = AppAprilBrush.getContext();
@@ -39,6 +41,12 @@ public class CanvasData {
         undoManager = UndoManager.getInstance();
         bufferPaint = new Paint(Paint.DITHER_FLAG);
         setOpacity(brushData.getProperty(BrushData.Property.OPACITY));
+
+        imageFolderPath = Environment.getExternalStorageDirectory().toString() + "/AprilBrush";
+        File dir = new File(imageFolderPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
     }
 
     public static CanvasData getInstance() {
@@ -82,23 +90,25 @@ public class CanvasData {
         buffer.eraseColor(Color.TRANSPARENT);
         undoManager.clear();
         undoManager.add(bitmap);
-        filename = System.currentTimeMillis() + ".png";
+        imagePath = imageFolderPath + "/" + System.currentTimeMillis() + ".png";
 
         Toast.makeText(context, resources.getString(R.string.message_new_picture), Toast.LENGTH_SHORT).show();
     }
 
-    public void loadImage() {
+    public void loadImage(String path) {
+        imagePath = path;
+        bitmap = BitmapFactory.decodeFile(path);
+        bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+        buffer.eraseColor(Color.TRANSPARENT);
+        undoManager.clear();
+        undoManager.add(bitmap);
+
         Toast.makeText(context, resources.getString(R.string.message_load_picture), Toast.LENGTH_SHORT).show();
     }
 
     public void saveImage() {
-        String path = Environment.getExternalStorageDirectory().toString() + "/AprilBrush";
-        File dir = new File(path);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        File file = new File(path, filename);
+        File file = new File(imagePath);
         OutputStream fOut;
         try {
             fOut = new FileOutputStream(file);

@@ -1,7 +1,11 @@
 package ua.inf.krre.aprilbrush.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -19,9 +23,11 @@ import ua.inf.krre.aprilbrush.view.PaintView;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     public static final String PREFS_NAME = "prefs";
+    private static final int SELECT_PICTURE = 1;
     private ColorDialog colorDialog;
     private UndoManager undoManager;
     private PaintView paintView;
+    private String selectedImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +74,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 paintView.invalidate();
                 break;
             case R.id.loadImageButton:
-                CanvasData.getInstance().loadImage();
-                paintView.invalidate();
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
                 break;
             case R.id.saveImageButton:
                 CanvasData.getInstance().saveImage();
@@ -81,7 +91,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 paintView.invalidate();
                 break;
             case R.id.brushImageButton:
-                Intent intent = new Intent(this, BrushSettingsActivity.class);
+                intent = new Intent(this, BrushSettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.colorImageButton:
@@ -102,5 +112,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onStop() {
         super.onStop();
         JSONSharedPreferences.saveJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME, new JSONArray(BrushData.getInstance().getList()));
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                selectedImagePath = getPath(selectedImageUri);
+                CanvasData.getInstance().loadImage(selectedImagePath);
+                paintView.invalidate();
+            }
+        }
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(columnIndex);
     }
 }
