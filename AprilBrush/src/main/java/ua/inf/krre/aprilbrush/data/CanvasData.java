@@ -1,10 +1,19 @@
 package ua.inf.krre.aprilbrush.data;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
+import ua.inf.krre.aprilbrush.AppAprilBrush;
 import ua.inf.krre.aprilbrush.logic.UndoManager;
 
 public class CanvasData {
@@ -14,6 +23,7 @@ public class CanvasData {
     private Paint bufferPaint;
     private BrushData brushData;
     private UndoManager undoManager;
+    private String filename;
 
     private CanvasData() {
         brushData = BrushData.getInstance();
@@ -55,7 +65,42 @@ public class CanvasData {
     public void createBitmaps(int width, int height) {
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         buffer = Bitmap.createBitmap(bitmap);
+        newImage();
+    }
+
+    public void newImage() {
+        bitmap.eraseColor(Color.WHITE);
+        buffer.eraseColor(Color.TRANSPARENT);
+        undoManager.clear();
         undoManager.add(bitmap);
+        filename = System.currentTimeMillis() + ".png";
+        Log.d("AB", "new");
+    }
+
+    public void loadImage() {
+        Log.d("AB", "loaded");
+    }
+
+    public void saveImage() {
+        Context context = AppAprilBrush.getContext();
+
+        String path = Environment.getExternalStorageDirectory().toString() + "/AprilBrush";
+        File dir = new File(path);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        File file = new File(path, filename);
+        OutputStream fOut;
+        try {
+            fOut = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+            MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
+        } catch (Exception e) {
+            Log.d("Image Writer", "Problem with the image. Stacktrace: ", e);
+        }
     }
 
     public void applyBuffer() {

@@ -29,6 +29,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setContentView(R.layout.main);
 
+        ImageButton newButton = (ImageButton) findViewById(R.id.newImageButton);
+        newButton.setOnClickListener(this);
         ImageButton loadButton = (ImageButton) findViewById(R.id.loadImageButton);
         loadButton.setOnClickListener(this);
         ImageButton saveButton = (ImageButton) findViewById(R.id.saveImageButton);
@@ -61,9 +63,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.newImageButton:
+                CanvasData.getInstance().newImage();
+                paintView.invalidate();
+                break;
             case R.id.loadImageButton:
+                CanvasData.getInstance().loadImage();
+                paintView.invalidate();
                 break;
             case R.id.saveImageButton:
+                CanvasData.getInstance().saveImage();
                 break;
             case R.id.helpImageButton:
                 break;

@@ -15,17 +15,25 @@
         android:gravity="center">
 
         <ImageButton
-            android:id="@+id/saveImageButton"
+            android:id="@+id/newImageButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/picture_empty" />
+
+        <ImageButton
+            android:id="@+id/loadImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@null"
             android:src="@drawable/picture_add" />
 
         <ImageButton
-            android:id="@+id/loadImageButton"
+            android:id="@+id/saveImageButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@null"
             android:src="@drawable/picture_save" />
@@ -33,7 +41,7 @@
         <ImageButton
             android:id="@+id/helpImageButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@null"
             android:src="@drawable/help" />

@@ -32,6 +32,11 @@ public class UndoManager {
         }
     }
 
+    public void clear() {
+        undoStack.clear();
+        stackPos = -1;
+    }
+
     public void add(Bitmap bitmap) {
         // clear ending of the stack
         while (stackPos < undoStack.size() - 1) {

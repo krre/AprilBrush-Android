@@ -8,11 +8,15 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="18" />
 
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".AppAprilBrush"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:installLocation="preferExternal"
+
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
@@ -28,6 +32,7 @@
             android:screenOrientation="portrait">
 
         </activity>
+
     </application>
 
 </manifest>
