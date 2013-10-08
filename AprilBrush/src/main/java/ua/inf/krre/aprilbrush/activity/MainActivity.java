@@ -3,8 +3,6 @@ package ua.inf.krre.aprilbrush.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -31,6 +29,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setContentView(R.layout.main);
 
+        ImageButton loadButton = (ImageButton) findViewById(R.id.loadImageButton);
+        loadButton.setOnClickListener(this);
+        ImageButton saveButton = (ImageButton) findViewById(R.id.saveImageButton);
+        saveButton.setOnClickListener(this);
+        ImageButton helpButton = (ImageButton) findViewById(R.id.helpImageButton);
+        helpButton.setOnClickListener(this);
+
         ImageButton undoButton = (ImageButton) findViewById(R.id.undoImageButton);
         undoButton.setOnClickListener(this);
         ImageButton brushButton = (ImageButton) findViewById(R.id.brushImageButton);
@@ -56,6 +61,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.loadImageButton:
+                break;
+            case R.id.saveImageButton:
+                break;
+            case R.id.helpImageButton:
+                break;
             case R.id.undoImageButton:
                 undoManager.undo();
                 paintView.invalidate();

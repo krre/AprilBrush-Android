@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import ua.inf.krre.aprilbrush.data.CanvasData;
 
 public class UndoManager {
-    private static final int UNDO_DEEP = 20;
+    private static final int UNDO_DEEP = 10;
     private static UndoManager undoManager = new UndoManager();
     private LinkedList<Bitmap> undoStack;
     private int stackPos = -1;
