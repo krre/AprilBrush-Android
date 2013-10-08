@@ -126,7 +126,7 @@ public class ColorPickerView extends View {
 
         canvas.save();
         canvas.translate(xyOrigin, xyOrigin);
-        canvas.rotate(hsv[HUE]);
+        canvas.rotate(360 - hsv[HUE]);
         canvas.drawRect(innerRingRadius, 0, selectorWidth + innerRingRadius, selectorHeight, paint);
         canvas.restore();
     }
@@ -147,7 +147,7 @@ public class ColorPickerView extends View {
         int[] colors = new int[segments];
         float[] hsv = {0, 100, 100};
         for (int i = 0; i < segments; i++) {
-            colors[i] = Color.HSVToColor(hsv);
+            colors[segments - i - 1] = Color.HSVToColor(hsv);
             hsv[HUE] += hueStep;
         }
         return colors;
@@ -212,7 +212,7 @@ public class ColorPickerView extends View {
         if (hue < 0) {
             hue += 360;
         }
-        hsv[HUE] = hue;
+        hsv[HUE] = 360 - hue;
         drawSatRectangle(rectSize);
         colorNewImageView.setBackgroundColor(Color.HSVToColor(hsv));
     }
