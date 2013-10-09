@@ -66,6 +66,10 @@ public class BrushData {
         return list.get(index).getCurrentValue();
     }
 
+    public int getProperty(int index) {
+        return list.get(index).getCurrentValue();
+    }
+
     // order of the elements is same as order of adding its to the list
     public enum Property {
         SIZE, OPACITY, FLOW, HARDNESS, SPACING, ROUNDNESS, ANGLE, SCATTER, HUE, SATURATION, VALUE

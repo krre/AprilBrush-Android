@@ -8,18 +8,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.data.BrushData;
 import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.dialog.ColorDialog;
-import ua.inf.krre.aprilbrush.logic.JSONSharedPreferences;
+import ua.inf.krre.aprilbrush.logic.BrushEngine;
 import ua.inf.krre.aprilbrush.logic.UndoManager;
 import ua.inf.krre.aprilbrush.view.PaintView;
 
@@ -44,13 +40,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void loadPreferences() {
-        try {
-            JSONSharedPreferences.loadJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME);
-        } catch (JSONException e) {
-            throw new RuntimeException();
-        }
-
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        BrushEngine brushEngine = BrushEngine.getInstance();
+        BrushData brushData = BrushData.getInstance();
+        for (int i = 0; i < brushEngine.getBrushList().length; i++) {
+            int value = settings.getInt(BrushData.Property.values()[i].toString(), brushData.getProperty(i));
+            brushEngine.setValue(i, value);
+        }
+        brushEngine.setupColor();
+
         boolean setBrushMode = settings.getBoolean("brushMode", true);
         BrushData.getInstance().setBrushMode(setBrushMode);
         int fillColor = settings.getInt("fillColor", Color.WHITE);
@@ -164,13 +162,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onStop() {
         super.onStop();
-        JSONSharedPreferences.saveJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME, new JSONArray(BrushData.getInstance().getList()));
+        savePreferences();
+    }
 
+    private void savePreferences() {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("brushMode", BrushData.getInstance().isBrushMode());
         int color = Color.HSVToColor(CanvasData.getInstance().getFillColor());
         editor.putInt("fillColor", color);
+
+        BrushEngine brushEngine = BrushEngine.getInstance();
+        for (int i = 0; i < brushEngine.getBrushList().length; i++) {
+            int value = brushEngine.getValue(i);
+            editor.putInt(BrushData.Property.values()[i].toString(), value);
+        }
+
         editor.commit();
     }
 

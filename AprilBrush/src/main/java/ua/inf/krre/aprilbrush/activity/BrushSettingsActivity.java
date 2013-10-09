@@ -22,7 +22,7 @@ public class BrushSettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         Context context = getBaseContext();
         BrushEngine brushEngine = BrushEngine.getInstance();
-        List<BrushData.Brush> brushList = brushEngine.getBrushList();
+        BrushData brushData = BrushData.getInstance();
 
         ScrollView scrollView = new ScrollView(context);
         setContentView(scrollView);
@@ -35,14 +35,14 @@ public class BrushSettingsActivity extends Activity {
 
         scrollView.addView(layout, scrollViewParams);
 
-        for (int i = 0; i < brushList.size(); i++) {
+        for (int i = 0; i < brushEngine.getBrushList().length; i++) {
             SliderView sliderView = new SliderView(getApplicationContext());
-            BrushData.Brush brush = brushList.get(i);
+            BrushData.Brush brush = brushData.getList().get(i);
 
             sliderView.setName(brush.getName());
             sliderView.setMin(brush.getMinValue());
             sliderView.setMax(brush.getMaxValue());
-            sliderView.setValue(brush.getCurrentValue());
+            sliderView.setValue(brushEngine.getValue(i));
             sliderView.setId(i);
             sliderView.addObserver(brushEngine);
 

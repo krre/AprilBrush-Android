@@ -9,8 +9,6 @@ import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.view.MotionEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -35,7 +33,7 @@ public class BrushEngine implements Observer {
     private int[] colors = new int[3];
     private int[] eraserColors = new int[3];
     private float[] positions = new float[3];
-    private List<BrushData.Brush> brushList;
+    private int[] brushList;
 
     private BrushEngine() {
         canvasData = CanvasData.getInstance();
@@ -46,7 +44,7 @@ public class BrushEngine implements Observer {
         path = new Path();
         pathMeasure = new PathMeasure();
 
-        getBrushValues();
+        brushList = new int[BrushData.getInstance().getList().size()];
     }
 
     public static BrushEngine getInstance() {
@@ -72,18 +70,24 @@ public class BrushEngine implements Observer {
         setValue(BrushData.Property.VALUE, (int) (hsv[2] * 100));
     }
 
-    public List<BrushData.Brush> getBrushList() {
-
+    public int[] getBrushList() {
         return brushList;
     }
 
-    private int value(BrushData.Property property) {
-        return brushList.get(property.ordinal()).getCurrentValue();
+    public int getValue(BrushData.Property property) {
+        return brushList[property.ordinal()];
     }
 
-    private void setValue(BrushData.Property property, int value) {
-        BrushData.Brush brush = brushList.get(property.ordinal());
-        brush.setCurrentValue(value);
+    public int getValue(int index) {
+        return brushList[index];
+    }
+
+    public void setValue(BrushData.Property property, int value) {
+        brushList[property.ordinal()] = value;
+    }
+
+    public void setValue(int index, int value) {
+        brushList[index] = value;
     }
 
     private BrushData.Property property(int ordinal) {
@@ -92,12 +96,11 @@ public class BrushEngine implements Observer {
 
     public void update(Observable obj, Object arg) {
         SliderView sliderView = (SliderView) arg;
-        int id = sliderView.getId();
-        BrushData.Brush brush = brushList.get(id);
+        int index = sliderView.getId();
         int value = sliderView.getValue();
-        brush.setCurrentValue(value);
+        brushList[index] = value;
 
-        BrushData.Property property = property(id);
+        BrushData.Property property = property(index);
         if (property == BrushData.Property.HUE ||
                 property == BrushData.Property.SATURATION ||
                 property == BrushData.Property.VALUE ||
@@ -108,20 +111,14 @@ public class BrushEngine implements Observer {
         }
     }
 
-    private void getBrushValues() {
-        brushList = BrushData.getInstance().getList();
-        brushList = new ArrayList<BrushData.Brush>(brushList);
-        setupColor();
-    }
+    public void setupColor() {
 
-    private void setupColor() {
+        hsv[0] = getValue(BrushData.Property.HUE);
+        hsv[1] = getValue(BrushData.Property.SATURATION) / 100f;
+        hsv[2] = getValue(BrushData.Property.VALUE) / 100f;
 
-        hsv[0] = value(BrushData.Property.HUE);
-        hsv[1] = value(BrushData.Property.SATURATION) / 100f;
-        hsv[2] = value(BrushData.Property.VALUE) / 100f;
-
-        alpha = Math.round((float) value(BrushData.Property.FLOW) / 100 * 255);
-        float hardness = value(BrushData.Property.HARDNESS) / 100f;
+        alpha = Math.round((float) getValue(BrushData.Property.FLOW) / 100 * 255);
+        float hardness = getValue(BrushData.Property.HARDNESS) / 100f;
 
         setBrushColors();
 
@@ -130,7 +127,7 @@ public class BrushEngine implements Observer {
         positions[2] = 1;
 
         if (canvasData != null) {
-            canvasData.setOpacity(value(BrushData.Property.OPACITY));
+            canvasData.setOpacity(getValue(BrushData.Property.OPACITY));
         }
     }
 
@@ -170,8 +167,8 @@ public class BrushEngine implements Observer {
         double pointSpace = Math.sqrt(Math.pow(prevX - x, 2)
                 + Math.pow(prevY - y, 2));
 
-        int size = value(BrushData.Property.SIZE);
-        int spacing = value(BrushData.Property.SPACING);
+        int size = getValue(BrushData.Property.SIZE);
+        int spacing = getValue(BrushData.Property.SPACING);
         float deltaDab = size * (float) spacing / 100;
         if (pointSpace >= deltaDab) {
             path.quadTo(prevX, prevY, (x + prevX) / 2, (y + prevY) / 2);
@@ -191,9 +188,9 @@ public class BrushEngine implements Observer {
     }
 
     private void paintOneDab(float x, float y) {
-        float radius = value(BrushData.Property.SIZE) / 2f;
+        float radius = getValue(BrushData.Property.SIZE) / 2f;
 
-        float scatter = value(BrushData.Property.SCATTER) / 100f;
+        float scatter = getValue(BrushData.Property.SCATTER) / 100f;
         x += radius * 2 * scatter * (1 - 2 * (float) Math.random());
         y += radius * 2 * scatter * (1 - 2 * (float) Math.random());
 
@@ -205,10 +202,10 @@ public class BrushEngine implements Observer {
 
         canvas.save();
 
-        int angle = value(BrushData.Property.ANGLE);
+        int angle = getValue(BrushData.Property.ANGLE);
         canvas.rotate(angle, x, y);
 
-        int roundness = value(BrushData.Property.ROUNDNESS);
+        int roundness = getValue(BrushData.Property.ROUNDNESS);
         canvas.scale(1.0f, 100f / roundness, x, y);
 
         canvas.drawCircle(x, y, radius, paint);
@@ -219,10 +216,10 @@ public class BrushEngine implements Observer {
     @Override
     public String toString() {
         String properties = "";
-        for (int i = 0; i < brushList.size(); i++) {
+        for (int i = 0; i < brushList.length; i++) {
             BrushData.Property property = BrushData.Property.values()[i];
             String name = property.toString();
-            int value = value(property);
+            int value = getValue(property);
             properties = name + " = " + value + "\n";
         }
         return properties;
