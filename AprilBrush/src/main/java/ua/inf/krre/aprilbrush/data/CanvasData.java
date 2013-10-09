@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -109,19 +108,21 @@ public class CanvasData {
 
     public void saveImage() {
         File file = new File(imagePath);
+        file.delete(); // change the name of a picture to force update the gallery thumbnails
+        imagePath = imageFolderPath + "/" + System.currentTimeMillis() + ".png";
+        file = new File(imagePath);
+
         OutputStream fOut;
         try {
             fOut = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             fOut.flush();
             fOut.close();
-            MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName());
         } catch (Exception e) {
             Log.d("Image Writer", "Problem with the image. Stacktrace: ", e);
         }
 
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-
         Toast.makeText(context, resources.getString(R.string.message_save_picture), Toast.LENGTH_SHORT).show();
     }
 

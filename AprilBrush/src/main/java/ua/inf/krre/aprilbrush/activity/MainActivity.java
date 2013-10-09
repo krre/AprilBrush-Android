@@ -1,5 +1,6 @@
 package ua.inf.krre.aprilbrush.activity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,6 +13,8 @@ import android.widget.ImageButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.io.File;
 
 import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.data.BrushData;
@@ -74,8 +77,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 paintView.invalidate();
                 break;
             case R.id.loadImageButton:
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -125,7 +126,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    public String getPath(Uri uri) {
+    private String getPath(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = managedQuery(uri, projection, null, null, null);
         int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
