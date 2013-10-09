@@ -6,4 +6,5 @@
     <dimen name="seekbar_bottom_margin">16dp</dimen>
     <dimen name="brush_settings_padding">5dp</dimen>
     <dimen name="icon_bar_height">48dp</dimen>
+    <dimen name="help_row_margin">12dp</dimen>
 </resources>

@@ -94,6 +94,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 CanvasData.getInstance().saveImage();
                 break;
             case R.id.helpImageButton:
+                intent = new Intent(this, HelpActivity.class);
+                startActivity(intent);
                 break;
             case R.id.undoImageButton:
                 undoManager.undo();
