@@ -1,7 +1,9 @@
 package ua.inf.krre.aprilbrush.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,9 +33,33 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.main);
 
+        setupButtons();
+        loadPreferences();
+
+        undoManager = UndoManager.getInstance();
+        paintView = (PaintView) findViewById(R.id.paintView);
+        colorDialog = new ColorDialog();
+    }
+
+    private void loadPreferences() {
+        try {
+            JSONSharedPreferences.loadJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME);
+        } catch (JSONException e) {
+            throw new RuntimeException();
+        }
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        boolean setBrushMode = settings.getBoolean("brushMode", true);
+        BrushData.getInstance().setBrushMode(setBrushMode);
+        int fillColor = settings.getInt("fillColor", Color.WHITE);
+        float[] hsv = new float[3];
+        Color.colorToHSV(fillColor, hsv);
+        CanvasData.getInstance().setFillColor(hsv);
+    }
+
+    private void setupButtons() {
         // top tool bar
         ImageButton newButton = (ImageButton) findViewById(R.id.newImageButton);
         newButton.setOnClickListener(this);
@@ -66,15 +92,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageButton redoButton = (ImageButton) findViewById(R.id.redoImageButton);
         redoButton.setOnClickListener(this);
 
-        try {
-            JSONSharedPreferences.loadJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME);
-        } catch (JSONException e) {
-            throw new RuntimeException();
+        if (BrushData.getInstance().isBrushMode()) {
+            brushButton.setImageResource(R.drawable.paintbrush);
+        } else {
+            brushButton.setImageResource(R.drawable.draw_eraser);
         }
-
-        undoManager = UndoManager.getInstance();
-        paintView = (PaintView) findViewById(R.id.paintView);
-        colorDialog = new ColorDialog();
     }
 
     @Override
@@ -143,6 +165,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onStop() {
         super.onStop();
         JSONSharedPreferences.saveJSONArray(getBaseContext(), PREFS_NAME, BrushData.PREF_ITEM_NAME, new JSONArray(BrushData.getInstance().getList()));
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("brushMode", BrushData.getInstance().isBrushMode());
+        int color = Color.HSVToColor(CanvasData.getInstance().getFillColor());
+        editor.putInt("fillColor", color);
+        editor.commit();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

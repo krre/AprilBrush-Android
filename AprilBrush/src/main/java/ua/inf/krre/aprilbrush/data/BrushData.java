@@ -13,10 +13,10 @@ import ua.inf.krre.aprilbrush.R;
 public class BrushData {
     public static final String PREF_ITEM_NAME = "Brush";
     private static final BrushData brushData = new BrushData();
-    private List<Brush> list;
-    private boolean brushMode = true;
     Context context;
     Resources res;
+    private List<Brush> list;
+    private boolean brushMode = true;
 
     private BrushData() {
         context = AppAprilBrush.getContext();
@@ -42,6 +42,10 @@ public class BrushData {
 
     public boolean isBrushMode() {
         return brushMode;
+    }
+
+    public void setBrushMode(boolean brushMode) {
+        this.brushMode = brushMode;
     }
 
     public void toggleBrushMode() {

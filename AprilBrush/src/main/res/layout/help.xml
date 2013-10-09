@@ -191,7 +191,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
+        android:text="@string/icon_redo"
         android:id="@+id/textView9"
         android:layout_alignBottom="@+id/imageView10"
         android:layout_toRightOf="@+id/imageView6" />
