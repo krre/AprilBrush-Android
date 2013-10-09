@@ -190,7 +190,15 @@ public class BrushEngine implements Observer {
         x += radius * 2 * scatter * (1 - 2 * (float) Math.random());
         y += radius * 2 * scatter * (1 - 2 * (float) Math.random());
 
-        paint.setShader(new RadialGradient(x, y, radius, colors, positions, Shader.TileMode.CLAMP));
+        if (BrushData.getInstance().isBrushMode()) {
+            paint.setShader(new RadialGradient(x, y, radius, colors, positions, Shader.TileMode.CLAMP));
+        } else {
+            int color0 = Color.HSVToColor(alpha, new float[]{1, 0, 1} );
+            int color1 = Color.HSVToColor(alpha, new float[]{1, 0, 1});
+            int color2 = Color.HSVToColor(0, new float[]{1, 0, 1});
+            int[] eraserColors = {color0, color1, color2};
+            paint.setShader(new RadialGradient(x, y, radius, eraserColors, positions, Shader.TileMode.CLAMP));
+        }
 
         canvas.save();
 
