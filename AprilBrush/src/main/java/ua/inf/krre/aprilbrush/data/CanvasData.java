@@ -60,7 +60,6 @@ public class CanvasData {
     public void setFillColor(float[] hsv) {
         fillColor = Color.HSVToColor(hsv);
         BrushEngine.getInstance().setEraserColors(hsv);
-        clear();
     }
 
     public Paint getBufferPaint() {
