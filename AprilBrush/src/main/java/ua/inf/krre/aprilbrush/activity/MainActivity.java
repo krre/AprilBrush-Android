@@ -31,8 +31,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        setupButtons();
         loadPreferences();
+        setupButtons();
 
         undoManager = UndoManager.getInstance();
         paintView = (PaintView) findViewById(R.id.paintView);
@@ -85,7 +85,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageButton fillButton = (ImageButton) findViewById(R.id.fillImageButton);
         fillButton.setOnClickListener(this);
         fillButton.setOnLongClickListener(this);
-
 
         ImageButton redoButton = (ImageButton) findViewById(R.id.redoImageButton);
         redoButton.setOnClickListener(this);
