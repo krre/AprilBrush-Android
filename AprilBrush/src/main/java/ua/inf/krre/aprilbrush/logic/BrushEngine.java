@@ -21,7 +21,6 @@ public class BrushEngine implements Observer {
     private Paint paint;
     private Canvas canvas;
     private Path path;
-    private CanvasData canvasData;
     private PathMeasure pathMeasure;
     private float[] pathMeasurePos = new float[2];
     private float[] pathMeasureTan = new float[2];
@@ -36,8 +35,6 @@ public class BrushEngine implements Observer {
     private int[] brushList;
 
     private BrushEngine() {
-        canvasData = CanvasData.getInstance();
-
         paint = new Paint(Paint.DITHER_FLAG);
         paint.setAntiAlias(true);
 
@@ -126,9 +123,7 @@ public class BrushEngine implements Observer {
         positions[1] = (float) (Math.sqrt(hardness));
         positions[2] = 1;
 
-        if (canvasData != null) {
-            canvasData.setOpacity(getValue(BrushData.Property.OPACITY));
-        }
+        CanvasData.getInstance().setOpacity(getValue(BrushData.Property.OPACITY));
     }
 
     private void setBrushColors() {

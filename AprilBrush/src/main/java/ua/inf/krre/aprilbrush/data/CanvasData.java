@@ -27,7 +27,6 @@ public class CanvasData {
     private Bitmap bitmap;
     private Bitmap buffer;
     private Paint bufferPaint;
-    private BrushData brushData;
     private UndoManager undoManager;
     private Context context;
     private Resources resources;
@@ -38,11 +37,8 @@ public class CanvasData {
     private CanvasData() {
         context = AppAprilBrush.getContext();
         resources = context.getResources();
-        brushData = BrushData.getInstance();
         undoManager = UndoManager.getInstance();
         bufferPaint = new Paint(Paint.DITHER_FLAG);
-        setOpacity(brushData.getProperty(BrushData.Property.OPACITY));
-        setFillColor(new float[] {1, 0, 1}); // default white
 
         imageFolderPath = Environment.getExternalStorageDirectory().toString() + "/AprilBrush";
         File dir = new File(imageFolderPath);
@@ -64,6 +60,7 @@ public class CanvasData {
     public void setFillColor(float[] hsv) {
         fillColor = Color.HSVToColor(hsv);
         BrushEngine.getInstance().setEraserColors(hsv);
+        clear();
     }
 
     public Paint getBufferPaint() {
@@ -88,8 +85,10 @@ public class CanvasData {
     }
 
     public void clear() {
-        bitmap.eraseColor(fillColor);
-        undoManager.add(bitmap);
+        if (bitmap != null) {
+            bitmap.eraseColor(fillColor);
+            undoManager.add(bitmap);
+        }
     }
 
     public void createBitmaps(int width, int height) {
@@ -143,7 +142,8 @@ public class CanvasData {
     public void applyBuffer() {
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
-        int alpha = Math.round((float) (brushData.getProperty(BrushData.Property.OPACITY)) / 100 * 255);
+        int opacity = BrushEngine.getInstance().getValue(BrushData.Property.OPACITY);
+        int alpha = Math.round(opacity / 100f * 255);
         paint.setAlpha(alpha);
         canvas.drawBitmap(buffer, 0, 0, paint);
         buffer.eraseColor(Color.TRANSPARENT);
