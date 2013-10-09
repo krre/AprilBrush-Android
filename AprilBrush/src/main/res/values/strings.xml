@@ -22,12 +22,12 @@
     <string name="brush_flow">Flow</string>
     <string name="slider_value">100</string>
 
-    <string name="message_new_picture">"new picture"</string>
-    <string name="message_load_picture">"picture loaded"</string>
-    <string name="message_save_picture">"picture saved"</string>
+    <string name="message_new_picture">"New Picture"</string>
+    <string name="message_load_picture">"Picture Loaded"</string>
+    <string name="message_save_picture">"Picture Saved"</string>
 
-    <string name="brush_mode">"brush mode"</string>
-    <string name="eraser_mode">"eraser mode"</string>
+    <string name="brush_mode">"Brush Mode"</string>
+    <string name="eraser_mode">"Eraser Mode"</string>
 
     <string name="icon_new">"New picture"</string>
     <string name="icon_load">"Load picture"</string>
