@@ -2,6 +2,7 @@ package ua.inf.krre.aprilbrush.data;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,13 @@ public class BrushData {
     public static final String PREF_ITEM_NAME = "Brush";
     private static final BrushData brushData = new BrushData();
     private List<Brush> list;
+    private boolean brushMode = true;
+    Context context;
+    Resources res;
 
     private BrushData() {
-        Context context = AppAprilBrush.getContext();
-        Resources res = context.getResources();
+        context = AppAprilBrush.getContext();
+        res = context.getResources();
         list = new ArrayList<Brush>();
 
         list.add(new Brush(res.getString(R.string.brush_size), 1, 150, 20));
@@ -34,6 +38,19 @@ public class BrushData {
 
     public static BrushData getInstance() {
         return brushData;
+    }
+
+    public boolean isBrushMode() {
+        return brushMode;
+    }
+
+    public void toggleBrushMode() {
+        brushMode = !brushMode;
+        if (brushMode) {
+            Toast.makeText(context, res.getString(R.string.brush_mode), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, res.getString(R.string.eraser_mode), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public List<Brush> getList() {

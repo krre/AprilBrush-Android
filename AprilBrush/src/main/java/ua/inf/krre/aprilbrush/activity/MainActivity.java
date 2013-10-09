@@ -27,7 +27,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ColorDialog colorDialog;
     private UndoManager undoManager;
     private PaintView paintView;
-    private String selectedImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +121,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.brushImageButton:
-                Log.d("AB", "brush long click");
+                BrushData brushData = BrushData.getInstance();
+                brushData.toggleBrushMode();
+                ImageButton brushButton = (ImageButton) findViewById(R.id.brushImageButton);
+                if (brushData.isBrushMode()) {
+                    brushButton.setImageResource(R.drawable.paintbrush);
+                } else {
+                    brushButton.setImageResource(R.drawable.draw_eraser);
+                }
                 break;
             case R.id.fillImageButton:
                 Log.d("AB", "fill long click");
@@ -141,7 +147,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
-                selectedImagePath = getPath(selectedImageUri);
+                String selectedImagePath = getPath(selectedImageUri);
                 CanvasData.getInstance().loadImage(selectedImagePath);
                 paintView.invalidate();
             }
