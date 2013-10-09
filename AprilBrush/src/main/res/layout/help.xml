@@ -21,14 +21,13 @@
         android:text="@string/autor_name"
         android:id="@+id/autorTextView"
         android:layout_below="@+id/appNameTextView"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="25dp" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_below="@+id/autorTextView"
+        android:layout_below="@+id/iconsCreditTextView"
         android:layout_alignParentLeft="true"
         android:src="@drawable/picture_empty"
         android:paddingRight="15dp"
@@ -195,5 +194,15 @@
         android:id="@+id/textView9"
         android:layout_alignBottom="@+id/imageView10"
         android:layout_toRightOf="@+id/imageView6" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/icons_credit"
+        android:id="@+id/iconsCreditTextView"
+        android:layout_below="@+id/autorTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
 
 </RelativeLayout>

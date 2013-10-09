@@ -3,6 +3,7 @@
 
     <string name="app_name">AprilBrush 1.0.0</string>
     <string name="autor_name">by Vladimir Zarypov</string>
+    <string name="icons_credit">icons by www.fatcow.com/free-icons</string>
     <string name="action_settings">Settings</string>
     <string name="action_clear">Clear</string>
     <string name="action_color">Color</string>

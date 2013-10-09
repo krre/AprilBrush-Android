@@ -12,7 +12,7 @@ import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.logic.BrushEngine;
 
 public class PaintView extends View {
-    private BrushEngine engine;
+    private BrushEngine brushEngine;
     private CanvasData canvasData;
     private Canvas canvasBuffer;
     private Paint bitmapPaint;
@@ -22,7 +22,7 @@ public class PaintView extends View {
         bitmapPaint = new Paint(Paint.DITHER_FLAG);
         if (!isInEditMode()) {
             canvasData = CanvasData.getInstance();
-            engine = BrushEngine.getInstance();
+            brushEngine = BrushEngine.getInstance();
         }
     }
 
@@ -55,11 +55,11 @@ public class PaintView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                engine.setTouch(canvasBuffer, event);
+                brushEngine.setTouch(canvasBuffer, event);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
-                engine.paintDabs(event);
+                brushEngine.paintDabs(event);
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
