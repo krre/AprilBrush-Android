@@ -1,20 +1,17 @@
 package ua.inf.krre.aprilbrush.activity;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.io.File;
 
 import ua.inf.krre.aprilbrush.R;
 import ua.inf.krre.aprilbrush.data.BrushData;
@@ -24,7 +21,7 @@ import ua.inf.krre.aprilbrush.logic.JSONSharedPreferences;
 import ua.inf.krre.aprilbrush.logic.UndoManager;
 import ua.inf.krre.aprilbrush.view.PaintView;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener, View.OnLongClickListener {
     public static final String PREFS_NAME = "prefs";
     private static final int SELECT_PICTURE = 1;
     private ColorDialog colorDialog;
@@ -38,23 +35,35 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setContentView(R.layout.main);
 
+        // top tool bar
         ImageButton newButton = (ImageButton) findViewById(R.id.newImageButton);
         newButton.setOnClickListener(this);
+
         ImageButton loadButton = (ImageButton) findViewById(R.id.loadImageButton);
         loadButton.setOnClickListener(this);
+
         ImageButton saveButton = (ImageButton) findViewById(R.id.saveImageButton);
         saveButton.setOnClickListener(this);
+
         ImageButton helpButton = (ImageButton) findViewById(R.id.helpImageButton);
         helpButton.setOnClickListener(this);
 
+        // bottom tool bar
         ImageButton undoButton = (ImageButton) findViewById(R.id.undoImageButton);
         undoButton.setOnClickListener(this);
+
         ImageButton brushButton = (ImageButton) findViewById(R.id.brushImageButton);
         brushButton.setOnClickListener(this);
+        brushButton.setOnLongClickListener(this);
+
         ImageButton colorButton = (ImageButton) findViewById(R.id.colorImageButton);
         colorButton.setOnClickListener(this);
+
         ImageButton fillButton = (ImageButton) findViewById(R.id.fillImageButton);
         fillButton.setOnClickListener(this);
+        fillButton.setOnLongClickListener(this);
+
+
         ImageButton redoButton = (ImageButton) findViewById(R.id.redoImageButton);
         redoButton.setOnClickListener(this);
 
@@ -107,6 +116,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 paintView.invalidate();
                 break;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.brushImageButton:
+                Log.d("AB", "brush long click");
+                break;
+            case R.id.fillImageButton:
+                Log.d("AB", "fill long click");
+                break;
+        }
+        return true;
     }
 
     @Override
