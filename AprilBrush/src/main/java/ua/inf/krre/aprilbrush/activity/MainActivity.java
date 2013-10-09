@@ -104,7 +104,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 startActivity(intent);
                 break;
             case R.id.colorImageButton:
-                colorDialog.show(getSupportFragmentManager(), "color");
+                colorDialog.show(getSupportFragmentManager(), "brush");
                 break;
             case R.id.fillImageButton:
                 CanvasData.getInstance().clear();
@@ -131,7 +131,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
             case R.id.fillImageButton:
-                Log.d("AB", "fill long click");
+                colorDialog.show(getSupportFragmentManager(), "fill");
                 break;
         }
         return true;

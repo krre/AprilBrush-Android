@@ -33,6 +33,7 @@ public class BrushEngine implements Observer {
     private float hsv[] = new float[3];
     private int alpha;
     private int[] colors = new int[3];
+    private int[] eraserColors = new int[3];
     private float[] positions = new float[3];
     private List<BrushData.Brush> brushList;
 
@@ -50,6 +51,12 @@ public class BrushEngine implements Observer {
 
     public static BrushEngine getInstance() {
         return brushEngine;
+    }
+
+    public void setEraserColors(float[] hsv) {
+        eraserColors[0] = Color.HSVToColor(alpha, hsv);
+        eraserColors[1] = Color.HSVToColor(alpha, hsv);
+        eraserColors[2] = Color.HSVToColor(0, hsv);
     }
 
     public float[] getHsv() {
@@ -193,10 +200,6 @@ public class BrushEngine implements Observer {
         if (BrushData.getInstance().isBrushMode()) {
             paint.setShader(new RadialGradient(x, y, radius, colors, positions, Shader.TileMode.CLAMP));
         } else {
-            int color0 = Color.HSVToColor(alpha, new float[]{1, 0, 1} );
-            int color1 = Color.HSVToColor(alpha, new float[]{1, 0, 1});
-            int color2 = Color.HSVToColor(0, new float[]{1, 0, 1});
-            int[] eraserColors = {color0, color1, color2};
             paint.setShader(new RadialGradient(x, y, radius, eraserColors, positions, Shader.TileMode.CLAMP));
         }
 

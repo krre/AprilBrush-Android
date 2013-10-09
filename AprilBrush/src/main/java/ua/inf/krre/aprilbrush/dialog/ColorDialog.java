@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import ua.inf.krre.aprilbrush.R;
+import ua.inf.krre.aprilbrush.data.CanvasData;
 import ua.inf.krre.aprilbrush.logic.BrushEngine;
 import ua.inf.krre.aprilbrush.view.ColorPickerView;
 
@@ -29,9 +30,14 @@ public class ColorDialog extends DialogFragment {
 
         colorPickerView = (ColorPickerView) layout.findViewById(R.id.colorPickerView);
 
-
         brushEngine = BrushEngine.getInstance();
-        int color = Color.HSVToColor(brushEngine.getHsv());
+
+        int color;
+        if (getTag().equals("brush")) {
+            color = Color.HSVToColor(brushEngine.getHsv());
+        } else {
+            color = Color.HSVToColor(CanvasData.getInstance().getFillColor());
+        }
 
         ImageView colorPrevImageView = (ImageView) layout.findViewById(R.id.colorPrevImageView);
         colorPrevImageView.setBackgroundColor(color);
@@ -44,7 +50,11 @@ public class ColorDialog extends DialogFragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                brushEngine.setHsv(colorPickerView.getHsv());
+                if (getTag().equals("brush")) {
+                    brushEngine.setHsv(colorPickerView.getHsv());
+                } else {
+                    CanvasData.getInstance().setFillColor(colorPickerView.getHsv());
+                }
             }
         });
 
@@ -60,7 +70,11 @@ public class ColorDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        colorPickerView.setHsv(brushEngine.getHsv());
+        if (getTag().equals("brush")) {
+            colorPickerView.setHsv(brushEngine.getHsv());
+        } else {
+            colorPickerView.setHsv(CanvasData.getInstance().getFillColor());
+        }
     }
 }
 

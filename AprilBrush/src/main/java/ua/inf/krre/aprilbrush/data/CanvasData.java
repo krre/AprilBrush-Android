@@ -19,6 +19,7 @@ import java.io.OutputStream;
 
 import ua.inf.krre.aprilbrush.AppAprilBrush;
 import ua.inf.krre.aprilbrush.R;
+import ua.inf.krre.aprilbrush.logic.BrushEngine;
 import ua.inf.krre.aprilbrush.logic.UndoManager;
 
 public class CanvasData {
@@ -32,6 +33,7 @@ public class CanvasData {
     private Resources resources;
     private String imageFolderPath;
     private String imagePath;
+    private int fillColor;
 
     private CanvasData() {
         context = AppAprilBrush.getContext();
@@ -40,6 +42,7 @@ public class CanvasData {
         undoManager = UndoManager.getInstance();
         bufferPaint = new Paint(Paint.DITHER_FLAG);
         setOpacity(brushData.getProperty(BrushData.Property.OPACITY));
+        setFillColor(new float[] {1, 0, 1}); // default white
 
         imageFolderPath = Environment.getExternalStorageDirectory().toString() + "/AprilBrush";
         File dir = new File(imageFolderPath);
@@ -50,6 +53,17 @@ public class CanvasData {
 
     public static CanvasData getInstance() {
         return canvasData;
+    }
+
+    public float[] getFillColor() {
+        float[] hsv = new float[3];
+        Color.colorToHSV(fillColor, hsv);
+        return hsv;
+    }
+
+    public void setFillColor(float[] hsv) {
+        fillColor = Color.HSVToColor(hsv);
+        BrushEngine.getInstance().setEraserColors(hsv);
     }
 
     public Paint getBufferPaint() {
@@ -74,7 +88,7 @@ public class CanvasData {
     }
 
     public void clear() {
-        bitmap.eraseColor(Color.WHITE);
+        bitmap.eraseColor(fillColor);
         undoManager.add(bitmap);
     }
 
@@ -85,7 +99,7 @@ public class CanvasData {
     }
 
     public void newImage() {
-        bitmap.eraseColor(Color.WHITE);
+        bitmap.eraseColor(fillColor);
         buffer.eraseColor(Color.TRANSPARENT);
         undoManager.clear();
         undoManager.add(bitmap);
