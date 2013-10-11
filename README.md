@@ -1,9 +1,9 @@
-AprilBrush 0.1.0
+AprilBrush 1.0.0
 ================
 
 DESCRIPTION
 -----------
-Painting application for Android tablets
+Painting application for Android mobile phones
 
 LINKS
 -----
@@ -15,7 +15,7 @@ This software uses semantic versioning as described by http://semver.org
 
 AUTHORS
 -------
-Vladimir Zarypov <krre@mail.ru>
+Vladimir Zarypov <krre31@gmail.com>
 
 COPYRIGHT
 ---------
