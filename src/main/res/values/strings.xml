@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">AprilBrush</string>
-    <string name="app_version_name">AprilBrush 1.0.0</string>
+    <string name="app_version_name">AprilBrush 1.0.1</string>
     <string name="autor_name">by Vladimir Zarypov</string>
     <string name="icons_credit">icons by www.fatcow.com/free-icons</string>
     <string name="action_settings">Settings</string>
